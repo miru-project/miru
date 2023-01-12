@@ -41,7 +41,7 @@ const love = useLoveStore()
     svg {
         width: 50px;
         height: 50px;
-        animation: rotate 1s  infinite;
+        animation: rotate 1s infinite;
     }
 }
 
@@ -71,19 +71,20 @@ const love = useLoveStore()
 
         img {
             background-color: rgb(242, 242, 242);
-            height: 280px;
+            height: 100%;
             width: 100%;
             object-fit: cover;
             max-width: unset;
         }
 
         .img {
+            height: 18vw;
             position: relative;
             overflow: hidden;
 
             .love {
                 position: absolute;
-                bottom: 4.5px;
+                bottom: 0;
                 right: 0;
                 left: 0;
                 padding: 5px;
@@ -117,7 +118,7 @@ const love = useLoveStore()
         grid-template-columns: repeat(4, 1fr);
 
         &>div {
-            img {
+            .img {
                 height: 22vw;
             }
         }
@@ -130,7 +131,7 @@ const love = useLoveStore()
         grid-template-columns: repeat(3, 1fr);
 
         &>div {
-            img {
+            .img {
                 height: 44vw;
             }
         }
@@ -143,7 +144,7 @@ const love = useLoveStore()
         grid-template-columns: repeat(2, 1fr);
 
         &>div {
-            img {
+            .img {
                 height: 55vw;
             }
         }
