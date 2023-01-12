@@ -11,10 +11,6 @@ img {
     border-radius: 8px;
 }
 
-.iframe {
-    height: 600px;
-}
-
 .switch {
     margin: 18px 0px;
     display: flex;
@@ -40,8 +36,3 @@ img {
     }
 }
 
-@media screen and (max-width:1024px) {
-    .iframe {
-        height: 200px;
-    }
-}

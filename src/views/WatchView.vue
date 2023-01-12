@@ -1,12 +1,11 @@
 <script setup lang='ts'>
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { useMiruExpandStore } from "@/stores/expand";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import IconLoveVue from "@/components/icons/IconLove.vue";
 import IconUrlVue from "@/components/icons/IconUrl.vue";
-import DPlayer from 'dplayer';
-import Hls from "hls.js/dist/hls.min";
 import { useLoveStore } from "@/stores/love";
+import Player from "@/components/Player.vue";
 
 useRoute().meta.keepAlive = false
 
@@ -16,10 +15,8 @@ const miru = useMiruExpandStore().expands?.get(pkg)
 const data = ref()
 const url = String(useRoute().query.u)
 const playurl = ref()
-const hls = new Hls()
 const bangumi = ref({})
-let dplay: DPlayer
-
+const watchData = ref()
 
 onMounted(async () => {
     data.value = await miru.info(url)
@@ -28,46 +25,14 @@ onMounted(async () => {
 })
 
 const play = async (url: string) => {
-    if (dplay) {
-        dplay.destroy()
-    }
     window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth'
     });
-    const watchData = await miru.watch(url)
-    const player = document.querySelector(".player") as HTMLElement
-    if (watchData.type == 'iframe') {
-        player.innerHTML = `<iframe src="${watchData.src}" height="100%"  width="100%" class="iframe" scrolling="no" allowfullscreen="true" allowtransparency="true" frameborder="no" border="0" marginwidth="0" marginheight="0"></iframe>`
-        return
-    }
-    if (watchData.type == 'jump') {
-        window.open(watchData.src, '_blank')
-        return
-    }
-    dplay = new DPlayer({
-        container: player,
-        video: {
-            url: watchData.src,
-            type: 'hls',
-            customType: {
-                hls: (video: HTMLVideoElement, player: any) => {
-                    hls.loadSource(video.src)
-                    hls.attachMedia(video)
-                }
-            },
-        },
-    })
-
-
+    watchData.value = await miru.watch(url)
 }
 
-onUnmounted(() => {
-    if (dplay) {
-        dplay.destroy()
-    }
-})
 const jump = (url: string) => {
     window.open(url)
 }
@@ -79,8 +44,7 @@ const jump = (url: string) => {
             丢失扩展 "{{ useRoute().query.p }}"
         </div>
         <div v-else-if="data">
-            <div class="player">
-            </div>
+            <Player class="player" v-if="watchData" :options="watchData" />
             <div class="info">
                 <div><img :src="data.cover"></div>
                 <div class="desc">
@@ -120,10 +84,10 @@ const jump = (url: string) => {
 
 </template>
 <style lang="scss" scoped>
+
 .player {
     margin-bottom: 20px;
 }
-
 .info {
     display: flex;
 
@@ -188,6 +152,7 @@ const jump = (url: string) => {
         list-style-type: none;
         padding: 0;
         margin: 0;
+
         li {
             display: inline-block;
             margin-right: 10px;
