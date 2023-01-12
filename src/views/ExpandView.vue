@@ -20,8 +20,7 @@ const getInstalledExpand = async () => {
 getInstalledExpand()
 getRepo()
 const install = async (v: any, filename: string) => {
-  v.script = await request.get(`${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL}/repo/${filename}`)
-  expand.installExpand(v)
+  expand.installExpand(await request.get(`${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL}/repo/${filename}`))
 }
 
 </script>
@@ -46,7 +45,7 @@ const install = async (v: any, filename: string) => {
             <button @click="install(v, v.url)">
               <IconDownload />{{ expand.check(v) }}
             </button>
-            <button class="uninstall" v-if="expand.isInstall(v)" @click="expand.uninstallExpand(v)">
+            <button class="uninstall" v-if="expand.isInstall(v)" @click="expand.uninstallExpand(v.package)">
               <IconRemove />
             </button>
           </div>
@@ -54,7 +53,7 @@ const install = async (v: any, filename: string) => {
       </div>
     </div>
     <div class="lists" v-if="switchList == 'installed'">
-      <div v-if="installedExpand" v-for="(v, k) in installedExpand" :key="k">
+      <div v-if="installedExpand.size" v-for="(v, k) in installedExpand" :key="k">
         <div class="expand">
           <div class="icon" :style="`background-image:url(${v[1].icon})`"></div>
           <div class="info">
@@ -62,14 +61,14 @@ const install = async (v: any, filename: string) => {
             <div class="desc">{{ v[1].package }}</div>
           </div>
           <div class="install" @click="getInstalledExpand">
-            <button class="uninstall" v-if="expand.isInstall(v[1])" @click="expand.uninstallExpand(v[1])">
+            <button class="uninstall" v-if="expand.isInstall(v[1])" @click="expand.uninstallExpand(v[1].package)">
               <IconRemove />
             </button>
           </div>
         </div>
       </div>
       <div v-else>
-        <p>暂无扩展</p>
+        <p>没有扩展，请前往仓库安装</p>
       </div>
     </div>
   </main>
