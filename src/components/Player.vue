@@ -1,15 +1,20 @@
 <script setup lang='ts'>
 import DPlayer from 'dplayer';
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, watch } from "vue";
 import Hls from "hls.js/dist/hls.min";
 const props = defineProps(["options"])
 let dplay: DPlayer
-if (props.options.type == 'jump') {
-    window.open(props.options.src, '_blank')
-}
-onMounted(() => {
+
+watch(() => props.options, () => {
+    play()
+})
+
+const play = () => {
     if (dplay) {
         dplay.destroy
+    }
+    if (props.options.type == 'jump') {
+        window.open(props.options.src, '_blank')
     }
     if (props.options.type == 'player') {
         dplay = new DPlayer({
@@ -27,6 +32,9 @@ onMounted(() => {
             },
         })
     }
+}
+onMounted(() => {
+    play()
 })
 onUnmounted(() => {
     if (dplay) {
@@ -52,5 +60,4 @@ onUnmounted(() => {
     max-height: 600px;
     height: 50vw;
 }
-
 </style>
