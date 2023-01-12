@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import GridListVue from "@/components/GridList.vue";
 import { useLoveStore } from "@/stores/love";
-const love = useLoveStore()
+const love = useLoveStore();
 </script>
 
 <template>
@@ -10,6 +10,4 @@ const love = useLoveStore()
     <GridListVue :list="love.list"> </GridListVue>
   </main>
 </template>
-<style>
-
-</style>
+<style></style>

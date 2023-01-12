@@ -1,1 +1,1 @@
-declare module 'hls.js/dist/hls.min';
+declare module "hls.js/dist/hls.min";

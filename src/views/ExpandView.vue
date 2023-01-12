@@ -5,47 +5,71 @@ import IconDownload from "@/components/icons/IconDownload.vue";
 import IconRemove from "@/components/icons/IconRemove.vue";
 import { useMiruExpandStore } from "@/stores/expand";
 import { useSettingsStore } from "@/stores/settings";
-const expand = useMiruExpandStore()
-const settings = useSettingsStore()
-const switchList = ref('installed')
-const repo = ref()
-const installedExpand = ref()
+const expand = useMiruExpandStore();
+const settings = useSettingsStore();
+const switchList = ref("installed");
+const repo = ref();
+const installedExpand = ref();
 
 const getRepo = async () => {
-  repo.value = await request.get(`${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL}/index.json`)
-}
+  repo.value = await request.get(
+    `${
+      settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
+    }/index.json`
+  );
+};
 const getInstalledExpand = async () => {
-  installedExpand.value = expand.listExpands()
-}
-getInstalledExpand()
-getRepo()
+  installedExpand.value = expand.listExpands();
+};
+getInstalledExpand();
+getRepo();
 const install = async (v: any, filename: string) => {
-  expand.installExpand(await request.get(`${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL}/repo/${filename}`))
-}
-
+  expand.installExpand(
+    await request.get(
+      `${
+        settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
+      }/repo/${filename}`
+    )
+  );
+};
 </script>
 
 <template>
   <main>
     <h1>扩展</h1>
     <div class="switch">
-      <button @click="(switchList = 'installed') && getInstalledExpand()"
-        :class="{'activit':switchList == 'installed'}">已装载</button>
-      <button @click="(switchList = 'repo') && getRepo()" :class="{ 'activit': switchList == 'repo' }">仓库</button>
+      <button
+        @click="(switchList = 'installed') && getInstalledExpand()"
+        :class="{ activit: switchList == 'installed' }"
+      >
+        已装载
+      </button>
+      <button
+        @click="(switchList = 'repo') && getRepo()"
+        :class="{ activit: switchList == 'repo' }"
+      >
+        仓库
+      </button>
     </div>
     <div class="lists" v-if="switchList == 'repo'">
       <div v-for="(v, k) in repo" :key="k">
         <div class="expand">
           <div class="icon" :style="`background-image:url(${v.icon})`"></div>
           <div class="info">
-            <div>{{ v.name }} <span class="tag">{{ v.version }}</span></div>
+            <div>
+              {{ v.name }} <span class="tag">{{ v.version }}</span>
+            </div>
             <div class="desc">{{ v.package }}</div>
           </div>
           <div class="install" @click="getRepo">
             <button @click="install(v, v.url)">
               <IconDownload />{{ expand.check(v) }}
             </button>
-            <button class="uninstall" v-if="expand.isInstall(v)" @click="expand.uninstallExpand(v.package)">
+            <button
+              class="uninstall"
+              v-if="expand.isInstall(v)"
+              @click="expand.uninstallExpand(v.package)"
+            >
               <IconRemove />
             </button>
           </div>
@@ -53,15 +77,25 @@ const install = async (v: any, filename: string) => {
       </div>
     </div>
     <div class="lists" v-if="switchList == 'installed'">
-      <div v-if="installedExpand.size" v-for="(v, k) in installedExpand" :key="k">
+      <div
+        v-if="installedExpand.size"
+        v-for="(v, k) in installedExpand"
+        :key="k"
+      >
         <div class="expand">
           <div class="icon" :style="`background-image:url(${v[1].icon})`"></div>
           <div class="info">
-            <div>{{ v[1].name }} <span class="tag">{{ v[1].version }}</span></div>
+            <div>
+              {{ v[1].name }} <span class="tag">{{ v[1].version }}</span>
+            </div>
             <div class="desc">{{ v[1].package }}</div>
           </div>
           <div class="install" @click="getInstalledExpand">
-            <button class="uninstall" v-if="expand.isInstall(v[1])" @click="expand.uninstallExpand(v[1].package)">
+            <button
+              class="uninstall"
+              v-if="expand.isInstall(v[1])"
+              @click="expand.uninstallExpand(v[1].package)"
+            >
               <IconRemove />
             </button>
           </div>
@@ -145,7 +179,7 @@ const install = async (v: any, filename: string) => {
   }
 }
 
-@media screen and (max-width:1024px) {
+@media screen and (max-width: 1024px) {
   .expand {
     .icon {
       display: none;
@@ -158,6 +192,5 @@ const install = async (v: any, filename: string) => {
       }
     }
   }
-
 }
 </style>

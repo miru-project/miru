@@ -1,34 +1,32 @@
 <script setup lang="ts">
-import IconRefresh from '@/components/icons/IconRefresh.vue';
-import { useSettingsStore } from '@/stores/settings';
-import { ref } from 'vue';
+import IconRefresh from "@/components/icons/IconRefresh.vue";
+import { useSettingsStore } from "@/stores/settings";
+import { ref } from "vue";
 const settings = useSettingsStore();
 const miruProxy = ref();
 const miruRepo = ref();
 
-
 const setSettings = (key: string, value: string) => {
-  settings.setItem(key, value)
-  readSettings()
-}
+  settings.setItem(key, value);
+  readSettings();
+};
 
 const setDefault = (key: string) => {
-  settings.delItem(key)
-  readSettings()
-}
+  settings.delItem(key);
+  readSettings();
+};
 
 const readSettings = () => {
-  miruProxy.value = settings.getItem("MIRU_PROXY_URL") as string
-  miruRepo.value = settings.getItem("MIRU_REPO_URL") as string
+  miruProxy.value = settings.getItem("MIRU_PROXY_URL") as string;
+  miruRepo.value = settings.getItem("MIRU_REPO_URL") as string;
   if (!miruProxy.value) {
-    miruProxy.value = import.meta.env.MIRU_PROXY_URL
+    miruProxy.value = import.meta.env.MIRU_PROXY_URL;
   }
   if (!miruRepo.value) {
-    miruRepo.value = import.meta.env.MIRU_REPO_URL
+    miruRepo.value = import.meta.env.MIRU_REPO_URL;
   }
-}
-readSettings()
-
+};
+readSettings();
 </script>
 <template>
   <main>
@@ -36,14 +34,22 @@ readSettings()
     <div class="content">
       <h3>Miru-Proxy</h3>
       <div class="input">
-        <input type="text" v-model="miruProxy" @change="setSettings('MIRU_PROXY_URL', miruProxy)">
+        <input
+          type="text"
+          v-model="miruProxy"
+          @change="setSettings('MIRU_PROXY_URL', miruProxy)"
+        />
         <button @click="setDefault('MIRU_PROXY_URL')">
           <IconRefresh></IconRefresh>
         </button>
       </div>
       <h3>扩展仓库</h3>
       <div class="input">
-        <input type="text" v-model="miruRepo" @change="setSettings('MIRU_REPO_URL', miruRepo)">
+        <input
+          type="text"
+          v-model="miruRepo"
+          @change="setSettings('MIRU_REPO_URL', miruRepo)"
+        />
         <button @click="setDefault('MIRU_REPO_URL')">
           <IconRefresh></IconRefresh>
         </button>

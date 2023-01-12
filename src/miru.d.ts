@@ -1,7 +1,6 @@
-
-export { } 
+export {};
 declare global {
-    interface Window {
-        Miru: any
-    }
+  interface Window {
+    Miru: any;
+  }
 }

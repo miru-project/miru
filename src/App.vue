@@ -1,26 +1,22 @@
 <script setup lang="ts">
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
 import IconLoveVue from "@/components/icons/IconLove.vue";
 import IconSearchVue from "@/components/icons/IconSearch.vue";
 import IconExpandVue from "@/components/icons/IconExpand.vue";
 import IconSettingsVue from "@/components/icons/IconSettings.vue";
-import { useMiruExpandStore } from './stores/expand';
-import { ref, onMounted } from 'vue';
-import IconMenu from './components/icons/IconMenu.vue';
-const showSidebar = ref(false)
+import { useMiruExpandStore } from "./stores/expand";
+import { ref, onMounted } from "vue";
+import IconMenu from "./components/icons/IconMenu.vue";
+const showSidebar = ref(false);
 
 onMounted(() => {
-  useMiruExpandStore().initExpands()
-})
-
-
+  useMiruExpandStore().initExpands();
+});
 </script>
 
 <template>
   <nav :class="{ sidebar: true, showSidebar }" @click="showSidebar = false">
-    <div class="logo">
-      Miru
-    </div>
+    <div class="logo">Miru</div>
     <ul>
       <RouterLink to="/">
         <li class="love">
@@ -33,7 +29,8 @@ onMounted(() => {
         <li class="search">
           <span class="icon search">
             <IconSearchVue />
-          </span> 搜索
+          </span>
+          搜索
         </li>
       </RouterLink>
       <RouterLink to="/expand">
@@ -66,7 +63,6 @@ onMounted(() => {
         </KeepAlive>
       </transition>
     </RouterView>
-
   </div>
 </template>
 
@@ -123,12 +119,11 @@ onMounted(() => {
   overflow: auto;
   background-color: #fff;
   z-index: 30;
-  transition: all .2s;
+  transition: all 0.2s;
 
   .logo {
     margin-bottom: 10px;
     padding-left: 20px;
-
   }
 
   &.showSidebar {
