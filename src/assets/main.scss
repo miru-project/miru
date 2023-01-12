@@ -1,0 +1,47 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.iframe {
+    height: 600px;
+}
+
+.switch {
+    margin: 18px 0px;
+    display: flex;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    button {
+        border: unset;
+        margin-right: 8px;
+        padding: 8px 15px;
+        border-radius: 50px;
+        background-color: rgb(238, 238, 238);
+        cursor: pointer;
+        border: 1px solid #fff;
+        word-break: keep-all;
+
+        &.activit {
+            border: 1px solid rgb(126, 126, 126);
+        }
+    }
+}
+
+@media screen and (max-width:1024px) {
+    .iframe {
+        height: 200px;
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/request/(.*)",
+            "destination": "/api/miru-proxy"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
