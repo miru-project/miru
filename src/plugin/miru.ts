@@ -8,17 +8,19 @@ class Miru {
     return this;
   }
   request(url: string, optings: any) {
-    console.log(optings, url);
-    let opt = { headers: { "miru-url": this.url } };
-    if (optings) {
-      optings.headers = { ...optings.headers, "miru-url": this.url };
-      opt = optings;
+    if (!optings) {
+      optings = {}
     }
-    console.log(opt);
+    if (!optings.headers) {
+      optings.headers = { "Miru-Url": this.url }
+    }
+    if (!optings.headers["Miru-Url"]) {
+      optings.headers = { ...optings.headers, "Miru-Url": this.url }
+    }
     const miruProxy =
       ((useSettingsStore().getItem("MIRU_PROXY_URL") as string) ??
         import.meta.env.MIRU_PROXY_URL) + url;
-    return request(miruProxy, opt);
+    return request(miruProxy, optings);
   }
 }
 
