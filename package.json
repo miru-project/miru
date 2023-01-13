@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@types/dplayer": "^1.25.2",
+    "dashjs": "^4.5.2",
     "dplayer": "^1.27.0",
     "hls.js": "^1.2.9",
     "http-proxy-middleware": "^2.0.6",
