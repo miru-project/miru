@@ -7,8 +7,10 @@ body {
 }
 
 img {
-    max-width: 100%;
-    border-radius: 8px;
+    width: 100%;
+    max-width: 5rem;
+    // max-width: 100%;
+    // border-radius: 8px;
 }
 
 .switch {
@@ -26,6 +28,7 @@ img {
         padding: 8px 15px;
         border-radius: 50px;
         background-color: rgb(238, 238, 238);
+        
         cursor: pointer;
         border: 1px solid #fff;
         word-break: keep-all;

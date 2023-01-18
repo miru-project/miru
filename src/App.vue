@@ -16,7 +16,7 @@ onMounted(() => {
 
 <template>
   <nav :class="{ sidebar: true, showSidebar }" @click="showSidebar = false">
-    <div class="logo">Miru</div>
+    <div class="logo"><img src="/logo.svg" /></div>
     <ul>
       <RouterLink to="/">
         <li class="love">
@@ -29,8 +29,7 @@ onMounted(() => {
         <li class="search">
           <span class="icon search">
             <IconSearchVue />
-          </span>
-          搜索
+          </span>搜索
         </li>
       </RouterLink>
       <RouterLink to="/expand">
@@ -50,7 +49,7 @@ onMounted(() => {
     </ul>
   </nav>
   <nav class="mobile">
-    <div class="logo" @click="$router.push('/')">Miru</div>
+    <div class="logo" @click="$router.push('/')"><img src="/logo.svg" /></div>
     <div @click="showSidebar = !showSidebar">
       <IconMenu></IconMenu>
     </div>
