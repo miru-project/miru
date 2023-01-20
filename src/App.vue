@@ -85,6 +85,12 @@ onMounted(() => {
 .logo {
   font-size: 35px;
   font-weight: 900;
+
+  img {
+    width: 100%;
+    max-width: 5rem;
+    border-radius: 0;
+  }
 }
 
 .mobile {
