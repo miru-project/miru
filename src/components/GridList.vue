@@ -1,34 +1,27 @@
 <script setup lang="ts">
 import IconLove from "./icons/IconLove.vue";
-import IconRefresh from "./icons/IconRefresh.vue";
 import { useLoveStore } from "@/stores/love";
+import LoadingVue from "./Loading.vue";
 const prop = defineProps(["list", "loading", "nodata"]);
 const love = useLoveStore();
 </script>
 <template>
   <div>
     <div class="grid">
-      <div
-        v-if="prop.list && prop.list.length"
-        v-for="(v, k) in prop.list"
-        :key="k"
-      >
+      <div v-if="prop.list && prop.list.length" v-for="(v, k) in prop.list" :key="k">
         <div class="img">
           <RouterLink :to="`/watch?p=${v.pkg}&u=${v.url}`">
             <img referrerpolicy="no-referrer" :src="v.cover" />
           </RouterLink>
           <div class="love">
-            <IconLove
-              @click="love.loveOrUnLove(v)"
-              :fill="love.exist(v)"
-            ></IconLove>
+            <IconLove @click="love.loveOrUnLove(v)" :fill="love.exist(v)"></IconLove>
           </div>
         </div>
         <p>{{ v.title }}</p>
       </div>
     </div>
-    <div class="loading" v-if="prop.loading">
-      <IconRefresh></IconRefresh>
+    <div v-if="prop.loading">
+      <LoadingVue></LoadingVue>
     </div>
     <div v-if="nodata">
       <p>没有记录力~</p>
@@ -36,30 +29,6 @@ const love = useLoveStore();
   </div>
 </template>
 <style lang="scss" scoped>
-.loading {
-  height: 100px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  svg {
-    width: 50px;
-    height: 50px;
-    animation: rotate 1s infinite;
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -70,7 +39,7 @@ const love = useLoveStore();
     color: #000;
   }
 
-  & > div {
+  &>div {
     transition: all 0.1s;
 
     img {
@@ -115,7 +84,7 @@ const love = useLoveStore();
   .grid {
     grid-template-columns: repeat(4, 1fr);
 
-    & > div {
+    &>div {
       .img {
         height: 22vw;
       }
@@ -127,7 +96,7 @@ const love = useLoveStore();
   .grid {
     grid-template-columns: repeat(3, 1fr);
 
-    & > div {
+    &>div {
       .img {
         height: 44vw;
       }
@@ -139,7 +108,7 @@ const love = useLoveStore();
   .grid {
     grid-template-columns: repeat(2, 1fr);
 
-    & > div {
+    &>div {
       .img {
         height: 55vw;
       }
