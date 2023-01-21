@@ -7,11 +7,9 @@ import IconUrlVue from "@/components/icons/IconUrl.vue";
 import { useLoveStore } from "@/stores/love";
 import Player from "@/components/Player.vue";
 
-useRoute().meta.keepAlive = false;
-
 const love = useLoveStore();
 const pkg = String(useRoute().query.p);
-const miru = useMiruExpandStore().expands?.get(pkg);
+const expand = useMiruExpandStore().expandManage.getExpand(pkg);
 const data = ref();
 const url = String(useRoute().query.u);
 const playurl = ref();
@@ -19,7 +17,7 @@ const bangumi = ref({});
 const watchData = ref();
 
 onMounted(async () => {
-  data.value = await miru.info(url);
+  data.value = await expand.info(url);
   console.log(data.value);
   bangumi.value = {
     pkg,
@@ -35,7 +33,7 @@ const play = async (url: string) => {
     left: 0,
     behavior: "smooth",
   });
-  watchData.value = await miru.watch(url);
+  watchData.value = await expand.watch(url);
 };
 
 const jump = (url: string) => {
@@ -44,7 +42,7 @@ const jump = (url: string) => {
 </script>
 <template>
   <main>
-    <div v-if="!miru">丢失扩展 "{{ useRoute().query.p }}"</div>
+    <div v-if="!expand">丢失扩展 "{{ useRoute().query.p }}"</div>
     <div v-else-if="data">
       <Player class="player" v-if="watchData" :options="watchData" />
       <div class="info">
@@ -58,7 +56,7 @@ const jump = (url: string) => {
             <button @click="love.loveOrUnLove(bangumi)">
               <IconLoveVue :fill="love.exist(bangumi)"> </IconLoveVue>
             </button>
-            <button @click="jump(miru.url + url)">
+            <button @click="jump(expand.url + url)">
               <IconUrlVue></IconUrlVue>
             </button>
           </div>
@@ -69,12 +67,8 @@ const jump = (url: string) => {
           <h2>{{ v[0] }}</h2>
           <div class="urls">
             <ul>
-              <li
-                v-for="(vi, ki) in v[1]"
-                :class="{ activate: playurl == vi.url }"
-                :key="ki"
-                @click="(playurl = vi.url) && play(vi.url)"
-              >
+              <li v-for="(vi, ki) in v[1]" :class="{ activate: playurl == vi.url }" :key="ki"
+                @click="(playurl = vi.url) && play(vi.url)">
                 {{ vi.name }}
               </li>
             </ul>
@@ -89,6 +83,7 @@ const jump = (url: string) => {
 .player {
   margin-bottom: 20px;
 }
+
 .info {
   display: flex;
 

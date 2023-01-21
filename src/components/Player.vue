@@ -35,7 +35,7 @@ const play = () => {
           },
           dash: function (video: HTMLVideoElement, player: any) {
             dashjs.MediaPlayer().create().initialize(video, video.src, false);
-          }
+          },
         },
       },
     });
@@ -53,8 +53,20 @@ onUnmounted(() => {
 <template>
   <div class="player">
     <div v-if="props.options.type == 'iframe'">
-      <iframe :src="props.options.src" height="100%" width="100%" class="iframe" scrolling="no" allowfullscreen="true"
-        allowtransparency="true" frameborder="no" border="0" marginwidth="0" marginheight="0"></iframe>
+      <iframe
+        referrerpolicy="no-referrer"
+        :src="props.options.src"
+        height="100%"
+        width="100%"
+        class="iframe"
+        scrolling="no"
+        allowfullscreen="true"
+        allowtransparency="true"
+        frameborder="no"
+        border="0"
+        marginwidth="0"
+        marginheight="0"
+      ></iframe>
     </div>
     <div v-if="props.options.type == 'player'">
       <div id="dplayer"></div>

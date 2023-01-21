@@ -34,6 +34,23 @@ img {
         &.activit {
             border: 1px solid rgb(126, 126, 126);
         }
+
+        &:disabled,
+        &[disabled] {
+            background-color: #000;
+        }
     }
 }
 
+button {
+
+    &:disabled,
+    &[disabled] {
+        background-color: rgb(183, 183, 183) !important;
+        color: rgb(108, 108, 108) !important;
+        cursor: unset !important;
+        svg {
+            fill: rgb(108, 108, 108) !important;
+        }
+    }
+}

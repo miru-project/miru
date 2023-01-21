@@ -2,6 +2,7 @@
 import IconRefresh from "@/components/icons/IconRefresh.vue";
 import { useSettingsStore } from "@/stores/settings";
 import { ref } from "vue";
+import { version } from "./../../package.json";
 const settings = useSettingsStore();
 const miruProxy = ref();
 const miruRepo = ref();
@@ -34,26 +35,22 @@ readSettings();
     <div class="content">
       <h3>Miru-Proxy</h3>
       <div class="input">
-        <input
-          type="text"
-          v-model="miruProxy"
-          @change="setSettings('MIRU_PROXY_URL', miruProxy)"
-        />
+        <input type="text" v-model="miruProxy" @change="setSettings('MIRU_PROXY_URL', miruProxy)" />
         <button @click="setDefault('MIRU_PROXY_URL')">
           <IconRefresh></IconRefresh>
         </button>
       </div>
       <h3>扩展仓库</h3>
       <div class="input">
-        <input
-          type="text"
-          v-model="miruRepo"
-          @change="setSettings('MIRU_REPO_URL', miruRepo)"
-        />
+        <input type="text" v-model="miruRepo" @change="setSettings('MIRU_REPO_URL', miruRepo)" />
         <button @click="setDefault('MIRU_REPO_URL')">
           <IconRefresh></IconRefresh>
         </button>
       </div>
+      <h2>关于</h2>
+      当前版本：v{{ version }} <br>
+      开源：<a href="https://github.com/miru-project/miru" target="_blank">Github</a> <br>
+      本项目灵感来自 <a href="https://tachiyomi.org/" target="_blank" rel="noopener noreferrer">tachiyomi</a> <br>
     </div>
   </main>
 </template>

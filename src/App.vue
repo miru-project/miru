@@ -7,10 +7,11 @@ import IconSettingsVue from "@/components/icons/IconSettings.vue";
 import { useMiruExpandStore } from "./stores/expand";
 import { ref, onMounted } from "vue";
 import IconMenu from "./components/icons/IconMenu.vue";
+import Alert from "./components/Alert.vue";
 const showSidebar = ref(false);
-
+const expandStore = useMiruExpandStore()
 onMounted(() => {
-  useMiruExpandStore().initExpands();
+  expandStore.initExpands();
 });
 </script>
 
@@ -55,13 +56,18 @@ onMounted(() => {
     </div>
   </nav>
   <div class="content">
-    <RouterView v-slot="{ Component }">
-      <transition name="slide-fade">
-        <KeepAlive exclude="WatchView,ExpandView,SettingsView">
-          <component :is="Component" />
-        </KeepAlive>
-      </transition>
-    </RouterView>
+    <div v-if="expandStore.installComplete">
+      <RouterView v-slot="{ Component }">
+        <transition name="slide-fade">
+          <KeepAlive exclude="WatchView,ExpandView,SettingsView">
+            <component :is="Component" />
+          </KeepAlive>
+        </transition>
+      </RouterView>
+    </div>
+    <div class="init-expand" v-else>
+      <Alert text="准备中"></Alert>
+    </div>
   </div>
 </template>
 
@@ -70,6 +76,10 @@ onMounted(() => {
   margin-left: 230px;
   padding: 30px 80px 0;
   max-width: 1300px;
+}
+
+.init-expand {
+  margin-top: 300px;
 }
 
 .slide-fade-enter-active {

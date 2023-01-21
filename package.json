@@ -1,6 +1,6 @@
 {
   "name": "miru",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "dev": "vite --mode development",
@@ -16,6 +16,7 @@
     "dplayer": "^1.27.0",
     "hls.js": "^1.2.9",
     "http-proxy-middleware": "^2.0.6",
+    "js-base64": "^3.7.4",
     "pinia": "^2.0.28",
     "sass": "^1.57.1",
     "umi-request": "^1.4.0",

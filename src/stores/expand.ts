@@ -1,28 +1,46 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
+import { ExpandManage } from "@/expandManage";
+import { encode } from "js-base64";
 
+// 管理存储扩展
 export const useMiruExpandStore = defineStore("expand", () => {
-  const expands = ref<Map<string, any>>(new Map<string, any>());
-
-  // 初始化扩展
+  const expandManage = ref<ExpandManage>(new ExpandManage())
+  const installComplete = ref(false)
+  // 初始化 加载已存储的扩展
   const initExpands = () => {
-    listExpands().forEach((e: any) => {
-      expands.value?.set(e.package, new Function(e.script)());
+    const localExpands = listExpands()
+    let count = 0
+    let needLoadExpandCount = localExpands.size
+    if (!needLoadExpandCount) {
+      installComplete.value = true
+    }
+    localExpands.forEach((e: any) => {
+      const dataBase64 = `data:text/javascript;base64,${encode(e.script)}`
+      expandManage.value.load(e.package, dataBase64).then(() => {
+        count++
+      }).catch((error) => {
+        needLoadExpandCount--
+        console.log(error);
+        alert(`${e.package} 扩展安装错误: \n ${error}`)
+      }).finally(() => {
+        if (count == needLoadExpandCount) {
+          installComplete.value = true
+        }
+      })
     });
-
-    return expands;
   };
 
-  // 列出已安装扩展
+  // 列出已存储扩展
   const listExpands = () => {
     const s = JSON.parse(localStorage.getItem("expands") ?? "[]");
     return new Map<string, any>(s);
   };
 
-  // 安装扩展
+  // 存储扩展并加载
   const installExpand = (script: string) => {
     const scriptMetaData = script.match(
-      /MiruUserScript([\s\S]+?)\/MiruUserScript/
+      /MiruExpand([\s\S]+?)\/MiruExpand/
     )?.[1];
     if (!scriptMetaData) {
       return alert("安装错误");
@@ -38,7 +56,7 @@ export const useMiruExpandStore = defineStore("expand", () => {
     }
 
     if (!expand.package || !expand.name || !expand.version) {
-      return alert("安装错误");
+      return alert("扩展解析错误、安装失败");
     }
     expand.script = script;
     // 存储扩展到localStorage
@@ -47,8 +65,9 @@ export const useMiruExpandStore = defineStore("expand", () => {
     const obj = Object.fromEntries(localExpand);
     localStorage.setItem("expands", JSON.stringify(Object.entries(obj)));
     // 装载扩展
-    expands.value?.set(expand.package, new Function(expand.script)());
+    expandManage.value.load(expand.package, `data:text/javascript;base64,${encode(script)}`)
   };
+  
 
   // 卸载扩展
   const uninstallExpand = (pkg: string) => {
@@ -58,7 +77,7 @@ export const useMiruExpandStore = defineStore("expand", () => {
     const obj = Object.fromEntries(localExpand);
     localStorage.setItem("expands", JSON.stringify(Object.entries(obj)));
     // 卸载扩展
-    expands.value?.delete(pkg);
+    expandManage.value.unload(pkg)
   };
 
   // 从已安装扩展通过包名获取名称
@@ -88,7 +107,8 @@ export const useMiruExpandStore = defineStore("expand", () => {
   };
 
   return {
-    expands,
+    expandManage,
+    installComplete,
     listExpands,
     initExpands,
     installExpand,
