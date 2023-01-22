@@ -48,7 +48,7 @@ const install = async (v: any, filename: string) => {
 
 <template>
   <main>
-    <h1>扩展</h1>
+    <h1 class="page-title">扩展</h1>
     <div class="switch">
       <button @click="(switchList = 'installed') && getInstalledExpand()"
         :class="{ activit: switchList == 'installed' }">

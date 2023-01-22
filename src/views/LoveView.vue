@@ -8,7 +8,7 @@ const love = useLoveStore();
 
 <template>
   <main>
-    <h1>收藏</h1>
+    <h1 class="page-title">收藏</h1>
     <div v-if="love.list.length">
       <GridListVue :list="love.list"> </GridListVue>
     </div>
