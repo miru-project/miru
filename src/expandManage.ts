@@ -3,28 +3,26 @@ import request from "umi-request";
 
 // 扩展类 扩展需要继承此类来使用request方法来通过代理请求数据
 class Expand {
-    packageName: string;
     url: string;
-    constructor(packageName: string, url: string) {
+    constructor(url: string) {
         this.url = url
-        this.packageName = packageName
         return this
     }
     // 发送请求
-    request(url: string, optings: any) {
-        if (!optings) {
-            optings = {}
+    request(url: string, options: any) {
+        if (!options) {
+            options = {}
         }
-        if (!optings.headers) {
-            optings.headers = { "Miru-Url": this.url }
+        if (!options.headers) {
+            options.headers = { "Miru-Url": this.url }
         }
-        if (!optings.headers["Miru-Url"]) {
-            optings.headers = { ...optings.headers, "Miru-Url": this.url }
+        if (!options.headers["Miru-Url"]) {
+            options.headers = { ...options.headers, "Miru-Url": this.url }
         }
         const miruProxy =
             ((useSettingsStore().getItem("MIRU_PROXY_URL") as string) ??
                 import.meta.env.MIRU_PROXY_URL) + url;
-        return request(miruProxy, optings);
+        return request(miruProxy, options);
     }
     search(kw: string, page: number): unknown {
         throw new Error("not implement");
@@ -51,7 +49,7 @@ export class ExpandManage {
         return new Promise((resolve, reject) => {
             import(/* @vite-ignore */expandScriptUrl)
                 .then((expand) => {
-                    this.expand.set(packageName, new expand.default(packageName))
+                    this.expand.set(packageName, new expand.default())
                     resolve(packageName)
                 })
                 .catch((error) => {

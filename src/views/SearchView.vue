@@ -63,7 +63,7 @@ onMounted(() => {
 
 <template>
   <main>
-    <h1>搜索</h1>
+    <h1 class="page-title">搜索</h1>
     <form @submit.prevent="search(activeExpand)">
       <input type="text" id="search" v-model="kw" @input="!kw ? getNew(activeExpand) : false" placeholder="找点什么好康的呢？" />
     </form>
