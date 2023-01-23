@@ -49,7 +49,7 @@ export class ExpandManage {
         return new Promise((resolve, reject) => {
             import(/* @vite-ignore */expandScriptUrl)
                 .then((expand) => {
-                    this.expand.set(packageName, new expand.default(packageName))
+                    this.expand.set(packageName, new expand.default())
                     resolve(packageName)
                 })
                 .catch((error) => {
