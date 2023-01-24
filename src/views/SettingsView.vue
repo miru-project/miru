@@ -31,7 +31,7 @@ readSettings();
 </script>
 <template>
   <main>
-    <h1 class="page-tile">设置</h1>
+    <h1 class="page-title">设置</h1>
     <div class="content">
       <h3>Miru-Proxy</h3>
       <div class="input">
