@@ -2,16 +2,16 @@
 import { RouterLink, RouterView } from "vue-router";
 import IconLoveVue from "@/components/icons/IconLove.vue";
 import IconSearchVue from "@/components/icons/IconSearch.vue";
-import IconExpandVue from "@/components/icons/IconExpand.vue";
+import IconExtensionVue from "@/components/icons/IconExtension.vue";
 import IconSettingsVue from "@/components/icons/IconSettings.vue";
-import { useMiruExpandStore } from "./stores/expand";
+import { useMiruExtensionStore } from "./stores/extension";
 import { ref, onMounted } from "vue";
 import IconMenu from "./components/icons/IconMenu.vue";
-import Alert from "./components/Alert.vue";
+import IconTips from "./components/IconTips.vue";
 const showSidebar = ref(false);
-const expandStore = useMiruExpandStore()
+const extensionStore = useMiruExtensionStore()
 onMounted(() => {
-  expandStore.initExpands();
+  extensionStore.initExtensions();
 });
 </script>
 
@@ -33,10 +33,10 @@ onMounted(() => {
           </span>搜索
         </li>
       </RouterLink>
-      <RouterLink to="/expand">
-        <li class="expand">
-          <span class="icon expand">
-            <IconExpandVue />
+      <RouterLink to="/extension">
+        <li class="extension">
+          <span class="icon extension">
+            <IconExtensionVue />
           </span>扩展
         </li>
       </RouterLink>
@@ -56,17 +56,17 @@ onMounted(() => {
     </div>
   </nav>
   <div class="content">
-    <div v-if="expandStore.installComplete">
+    <div v-if="extensionStore.installComplete">
       <RouterView v-slot="{ Component }">
         <transition name="slide-fade">
-          <KeepAlive exclude="WatchView,ExpandView,SettingsView">
+          <KeepAlive exclude="WatchView,ExtensionView,SettingsView">
             <component :is="Component" />
           </KeepAlive>
         </transition>
       </RouterView>
     </div>
-    <div class="init-expand" v-else>
-      <Alert text="准备中"></Alert>
+    <div class="init-Extension" v-else>
+      <IconTips text="准备中"></IconTips>
     </div>
   </div>
 </template>
@@ -78,7 +78,7 @@ onMounted(() => {
   max-width: 1300px;
 }
 
-.init-expand {
+.init-Extension {
   margin-top: 300px;
 }
 
@@ -166,7 +166,7 @@ onMounted(() => {
           color: rgb(173, 138, 0);
         }
 
-        .expand {
+        .extension {
           background-color: rgb(255, 241, 225);
           color: rgb(246, 135, 0);
         }
@@ -218,7 +218,7 @@ onMounted(() => {
         }
       }
 
-      &.expand {
+      &.extension {
         svg {
           fill: rgb(246, 135, 0);
         }

@@ -1,24 +1,30 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
-import { useMiruExpandStore } from "@/stores/expand";
+import { useMiruExtensionStore } from "@/stores/extension";
 import { onMounted, ref } from "vue";
 import IconLoveVue from "@/components/icons/IconLove.vue";
 import IconUrlVue from "@/components/icons/IconUrl.vue";
 import { useLoveStore } from "@/stores/love";
 import Player from "@/components/Player.vue";
+import Loading from "@/components/Loading.vue";
+import AlertVue from "@/components/IconTips.vue";
 
 const love = useLoveStore();
 const pkg = String(useRoute().query.p);
-const expand = useMiruExpandStore().expandManage.getExpand(pkg);
+const extension = useMiruExtensionStore().extensionManage.getExtension(pkg);
 const data = ref();
 const url = String(useRoute().query.u);
 const playurl = ref();
 const bangumi = ref({});
 const watchData = ref();
+const errMsg = ref();
 
 onMounted(async () => {
-  data.value = await expand.info(url);
-  console.log(data.value);
+  try {
+    data.value = await extension.info(url);
+  } catch (error) {
+    errMsg.value = error
+  }
   bangumi.value = {
     pkg,
     url,
@@ -33,7 +39,7 @@ const play = async (url: string) => {
     left: 0,
     behavior: "smooth",
   });
-  watchData.value = await expand.watch(url);
+  watchData.value = await extension.watch(url);
 };
 
 const jump = (url: string) => {
@@ -42,7 +48,7 @@ const jump = (url: string) => {
 </script>
 <template>
   <main>
-    <div v-if="!expand">丢失扩展 "{{ useRoute().query.p }}"</div>
+    <div v-if="!extension">丢失扩展 "{{ useRoute().query.p }}"</div>
     <div v-else-if="data">
       <Player class="player" v-if="watchData" :options="watchData" />
       <div class="info">
@@ -56,7 +62,7 @@ const jump = (url: string) => {
             <button @click="love.loveOrUnLove(bangumi)">
               <IconLoveVue :fill="love.exist(bangumi)"> </IconLoveVue>
             </button>
-            <button @click="jump(expand.url + url)">
+            <button @click="jump(extension.url + url)">
               <IconUrlVue></IconUrlVue>
             </button>
           </div>
@@ -76,13 +82,24 @@ const jump = (url: string) => {
         </div>
       </div>
     </div>
-    <div v-else>加载中...</div>
+    <div v-else class="tips">
+      <Loading v-if="!errMsg" text="加载中..."></Loading>
+      <AlertVue v-else :text="errMsg"></AlertVue>
+    </div>
   </main>
 </template>
 <style lang="scss" scoped>
 .player {
   margin-bottom: 20px;
 }
+
+.tips {
+  display: flex;
+  height: var(--fullHeightScreen);
+  justify-content: center;
+  align-items: center;
+}
+
 
 .info {
   display: flex;

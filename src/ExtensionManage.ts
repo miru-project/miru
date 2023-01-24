@@ -2,7 +2,7 @@ import { useSettingsStore } from "@/stores/settings";
 import request from "umi-request";
 
 // 扩展类 扩展需要继承此类来使用request方法来通过代理请求数据
-class Expand {
+class Extension {
     url: string;
     constructor(url: string) {
         this.url = url
@@ -38,18 +38,18 @@ class Expand {
     }
 }
 
-window.Expand = Expand
+window.Extension = Extension
 
-export class ExpandManage {
-    expand: Map<string, Expand>;
+export class ExtensionManage {
+    Extensions: Map<string, Extension>;
     constructor() {
-        this.expand = new Map()
+        this.Extensions = new Map()
     }
-    load(packageName: string, expandScriptUrl: string) {
+    load(packageName: string, ExtensionScriptUrl: string) {
         return new Promise((resolve, reject) => {
-            import(/* @vite-ignore */expandScriptUrl)
-                .then((expand) => {
-                    this.expand.set(packageName, new expand.default())
+            import(/* @vite-ignore */ExtensionScriptUrl)
+                .then((Extension) => {
+                    this.Extensions.set(packageName, new Extension.default())
                     resolve(packageName)
                 })
                 .catch((error) => {
@@ -59,16 +59,16 @@ export class ExpandManage {
 
     }
     unload(packageName: string) {
-        const expand = this.expand.get(packageName)
-        if (!expand) {
+        const Extension = this.Extensions.get(packageName)
+        if (!Extension) {
             return
         }
-        this.expand.delete(packageName)
+        this.Extensions.delete(packageName)
     }
-    getExpand(packageName: string): Expand {
-        return this.expand.get(packageName) as Expand
+    getExtension(packageName: string): Extension {
+        return this.Extensions.get(packageName) as Extension
     }
     isLoad(packageName: string): boolean {
-        return this.getExpand(packageName) ? true : false
+        return this.getExtension(packageName) ? true : false
     }
 }

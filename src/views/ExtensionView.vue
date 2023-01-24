@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { watch, ref, watchEffect } from "vue";
 import request from "umi-request";
 import IconDownload from "@/components/icons/IconDownload.vue";
 import IconRemove from "@/components/icons/IconRemove.vue";
-import { useMiruExpandStore } from "@/stores/expand";
+import { useMiruExtensionStore } from "@/stores/extension";
 import { useSettingsStore } from "@/stores/settings";
 import Loading from "@/components/Loading.vue";
-const expandStore = useMiruExpandStore();
+const extensionStore = useMiruExtensionStore();
 const settings = useSettingsStore();
 const switchList = ref("installed");
 const repo = ref();
-const installedExpand = ref();
+const installedExtension = ref();
 const installing = ref(false)
 const loading = ref(false)
 
@@ -26,10 +26,10 @@ const getRepo = async () => {
 getRepo()
 
 // 获取已经安装的扩展列表
-const getInstalledExpand = async () => {
-  installedExpand.value = expandStore.listExpands();
+const getInstalledExtension = async () => {
+  installedExtension.value = extensionStore.listExtensions();
 };
-getInstalledExpand();
+getInstalledExtension();
 
 // 安装扩展
 const install = async (v: any, filename: string) => {
@@ -38,19 +38,22 @@ const install = async (v: any, filename: string) => {
     `${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
     }/repo/${filename}`
   )
-  if (script) {
-    getRepo()
-    installing.value = false
-  }
-  expandStore.installExpand(script);
+  extensionStore.installExtension(script);
+  installing.value = false
+  getRepo()
 };
+
+const uninstall = (pkg: string) => {
+  extensionStore.uninstallExtension(pkg)
+  getRepo()
+}
 </script>
 
 <template>
   <main>
     <h1 class="page-title">扩展</h1>
     <div class="switch">
-      <button @click="(switchList = 'installed') && getInstalledExpand()"
+      <button @click="(switchList = 'installed') && getInstalledExtension()"
         :class="{ activit: switchList == 'installed' }">
         已装载
       </button>
@@ -60,7 +63,7 @@ const install = async (v: any, filename: string) => {
     </div>
     <div class="lists" v-if="switchList == 'repo'">
       <div v-for="(v, k) in repo" :key="k">
-        <div class="expand">
+        <div class="Extension">
           <div class="icon" :style="`background-image:url(${v.icon})`"></div>
           <div class="info">
             <div>
@@ -68,11 +71,11 @@ const install = async (v: any, filename: string) => {
             </div>
             <div class="desc">{{ v.package }}</div>
           </div>
-          <div class="install" @click="getRepo">
+          <div class="install">
             <button @click="install(v, v.url)" :disabled="installing">
-              <IconDownload />{{ expandStore.check(v) }}
+              <IconDownload />{{ extensionStore.check(v) }}
             </button>
-            <button class="uninstall" v-if="expandStore.isInstall(v)" @click="expandStore.uninstallExpand(v.package)">
+            <button class="uninstall" v-if="extensionStore.isInstall(v)" @click="uninstall(v.package)">
               <IconRemove />
             </button>
           </div>
@@ -83,19 +86,19 @@ const install = async (v: any, filename: string) => {
       </div>
     </div>
     <div class="lists" v-if="switchList == 'installed'">
-      <div v-if="installedExpand.size" v-for="(v, k) in installedExpand" :key="k">
-        <div class="expand">
+      <div v-if="installedExtension.size" v-for="(v, k) in installedExtension" :key="k">
+        <div class="Extension">
           <div class="icon" :style="`background-image:url(${v[1].icon})`"></div>
           <div class="info">
             <div>
               {{ v[1].name }} <span class="tag">{{ v[1].version }}</span>
-              <span class="tag" v-if="!expandStore.expandManage.isLoad(v[1].package)">安装错误</span>
+              <span class="tag" v-if="!extensionStore.extensionManage.isLoad(v[1].package)">安装错误</span>
             </div>
             <div class="desc">{{ v[1].package }}</div>
           </div>
-          <div class="install" @click="getInstalledExpand">
-            <button class="uninstall" v-if="expandStore.isInstall(v[1])"
-              @click="expandStore.uninstallExpand(v[1].package)">
+          <div class="install" @click="getInstalledExtension">
+            <button class="uninstall" v-if="extensionStore.isInstall(v[1])"
+              @click="extensionStore.uninstallExtension(v[1].package)">
               <IconRemove />
             </button>
           </div>
@@ -108,7 +111,7 @@ const install = async (v: any, filename: string) => {
   </main>
 </template>
 <style lang="scss" scoped>
-.expand {
+.Extension {
   display: flex;
   padding: 20px;
   background-color: rgb(242, 242, 242);
@@ -181,7 +184,7 @@ const install = async (v: any, filename: string) => {
 }
 
 @media screen and (max-width: 1024px) {
-  .expand {
+  .Extension {
     .icon {
       display: none;
     }
