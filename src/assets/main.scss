@@ -2,6 +2,14 @@
     box-sizing: border-box;
 }
 
+:root {
+    --fullHeightScreen: calc(100vh - 30px);
+
+    @media screen and (max-width: 1024px) {
+        --fullHeightScreen: calc(100vh - 100px);
+    }
+}
+
 body {
     margin: 0;
 }
@@ -26,7 +34,7 @@ img {
         padding: 8px 15px;
         border-radius: 50px;
         background-color: rgb(238, 238, 238);
-        
+
         cursor: pointer;
         border: 1px solid #fff;
         word-break: keep-all;
@@ -49,12 +57,13 @@ button {
         background-color: rgb(183, 183, 183) !important;
         color: rgb(108, 108, 108) !important;
         cursor: unset !important;
+
         svg {
             fill: rgb(108, 108, 108) !important;
         }
     }
 }
 
-.page-title{
+.page-title {
     margin-top: 0;
 }

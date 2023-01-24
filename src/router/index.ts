@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import LoveView from "../views/LoveView.vue";
 import SearchView from "../views/SearchView.vue";
-import ExpandView from "../views/ExpandView.vue";
+import ExtensionView from "../views/ExtensionView.vue";
 import SettingsView from "../views/SettingsView.vue";
 import WatchViewVue from "@/views/WatchView.vue";
 
@@ -19,9 +19,9 @@ const router = createRouter({
       component: SearchView,
     },
     {
-      path: "/expand",
-      name: "expand",
-      component: ExpandView,
+      path: "/extension",
+      name: "extension",
+      component: ExtensionView,
     },
     {
       path: "/settings",

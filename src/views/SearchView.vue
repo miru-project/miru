@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import GridList from "@/components/GridList.vue";
-import { useMiruExpandStore } from "@/stores/expand";
+import { useMiruExtensionStore } from "@/stores/extension";
 import { ref, reactive, onMounted } from "vue";
 
-const expandStore = useMiruExpandStore();
+const extensionStore = useMiruExtensionStore();
 const kw = ref();
 const page = ref(1);
 const searched = ref(false);
-const activeExpand = ref();
+const activeExtension = ref();
 const data = reactive([]);
 const loading = ref(false);
 const nodata = ref(false);
@@ -18,7 +18,7 @@ const search = async (pkg: string) => {
   try {
     data.length = 0;
     const res =
-      ((await expandStore.expandManage.getExpand(pkg).search(kw.value, page.value)) as never[]) ??
+      ((await extensionStore.extensionManage.getExtension(pkg).search(kw.value, page.value)) as never[]) ??
       [];
     res.forEach((e: any) => {
       e.pkg = pkg;
@@ -38,7 +38,7 @@ const getNew = async (pkg: string) => {
   loading.value = true;
   data.length = 0;
   try {
-    const res = ((await expandStore.expandManage.getExpand(pkg).latest()) as never[]) ?? [];
+    const res = ((await extensionStore.extensionManage.getExtension(pkg).latest()) as never[]) ?? [];
     res.forEach((e: any) => {
       e.pkg = pkg;
     });
@@ -52,31 +52,33 @@ const getNew = async (pkg: string) => {
 };
 
 onMounted(() => {
-  expandStore.expandManage.expand?.forEach((v, k) => {
-    if (!activeExpand.value) {
-      activeExpand.value = k;
+  extensionStore.extensionManage.Extensions?.forEach((v, k) => {
+    if (!activeExtension.value) {
+      activeExtension.value = k;
     }
   });
-  getNew(activeExpand.value);
+  getNew(activeExtension.value);
 })
 </script>
 
 <template>
   <main>
     <h1 class="page-title">搜索</h1>
-    <form @submit.prevent="search(activeExpand)">
-      <input type="text" id="search" v-model="kw" @input="!kw ? getNew(activeExpand) : false" placeholder="找点什么好康的呢？" />
+    <form @submit.prevent="search(activeExtension)">
+      <input type="text" id="search" v-model="kw" @input="!kw ? getNew(activeExtension) : false"
+        placeholder="找点什么好康的呢？" />
     </form>
-    <div v-if="expandStore.expandManage.expand.size">
+    <div v-if="extensionStore.extensionManage.Extensions.size">
       <div class="switch">
-        <button v-for="(v, k) in expandStore.expandManage.expand" :class="{ activit: activeExpand == v[0] }"
-          @click="(activeExpand = v[0]) && (kw ? search(v[0]) : getNew(v[0]))" :key="k">
-          {{ expandStore.getNameforPackge(v[0]) }}
+        <button v-for="(v, k) in extensionStore.extensionManage.Extensions"
+          :class="{ activit: activeExtension == v[0] }"
+          @click="(activeExtension = v[0]) && (kw ? search(v[0]) : getNew(v[0]))" :key="k">
+          {{ extensionStore.getNameforPackge(v[0]) }}
         </button>
       </div>
       <h3 v-if="!kw">最近更新</h3>
       <div>
-        <GridList v-if="expandStore.getNameforPackge(activeExpand) ?? false" :list="data" :loading="loading"
+        <GridList v-if="extensionStore.getNameforPackge(activeExtension) ?? false" :list="data" :loading="loading"
           :nodata="nodata">
         </GridList>
       </div>
