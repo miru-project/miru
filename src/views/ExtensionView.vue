@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref, watchEffect } from "vue";
+import { ref } from "vue";
 import request from "umi-request";
 import IconDownload from "@/components/icons/IconDownload.vue";
 import IconRemove from "@/components/icons/IconRemove.vue";
@@ -11,19 +11,20 @@ const settings = useSettingsStore();
 const switchList = ref("installed");
 const repo = ref();
 const installedExtension = ref();
-const installing = ref(false)
-const loading = ref(false)
+const installing = ref(false);
+const loading = ref(false);
 
 // 获取仓库扩展列表
 const getRepo = async () => {
-  loading.value = true
+  loading.value = true;
   repo.value = await request.get(
-    `${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
+    `${
+      settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
     }/index.json`
   );
-  loading.value = false
+  loading.value = false;
 };
-getRepo()
+getRepo();
 
 // 获取已经安装的扩展列表
 const getInstalledExtension = async () => {
@@ -33,31 +34,37 @@ getInstalledExtension();
 
 // 安装扩展
 const install = async (v: any, filename: string) => {
-  installing.value = true
+  installing.value = true;
   const script = await request.get(
-    `${settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
+    `${
+      settings.getItem("MIRU_REPO_URL") ?? import.meta.env.MIRU_REPO_URL
     }/repo/${filename}`
-  )
+  );
   extensionStore.installExtension(script);
-  installing.value = false
-  getRepo()
+  installing.value = false;
+  getRepo();
 };
 
 const uninstall = (pkg: string) => {
-  extensionStore.uninstallExtension(pkg)
-  getRepo()
-}
+  extensionStore.uninstallExtension(pkg);
+  getRepo();
+};
 </script>
 
 <template>
   <main>
     <h1 class="page-title">扩展</h1>
     <div class="switch">
-      <button @click="(switchList = 'installed') && getInstalledExtension()"
-        :class="{ activit: switchList == 'installed' }">
+      <button
+        @click="(switchList = 'installed') && getInstalledExtension()"
+        :class="{ activit: switchList == 'installed' }"
+      >
         已装载
       </button>
-      <button @click="(switchList = 'repo') && getRepo()" :class="{ activit: switchList == 'repo' }">
+      <button
+        @click="(switchList = 'repo') && getRepo()"
+        :class="{ activit: switchList == 'repo' }"
+      >
         仓库
       </button>
     </div>
@@ -75,7 +82,11 @@ const uninstall = (pkg: string) => {
             <button @click="install(v, v.url)" :disabled="installing">
               <IconDownload />{{ extensionStore.check(v) }}
             </button>
-            <button class="uninstall" v-if="extensionStore.isInstall(v)" @click="uninstall(v.package)">
+            <button
+              class="uninstall"
+              v-if="extensionStore.isInstall(v)"
+              @click="uninstall(v.package)"
+            >
               <IconRemove />
             </button>
           </div>
@@ -86,21 +97,33 @@ const uninstall = (pkg: string) => {
       </div>
     </div>
     <div class="lists" v-if="switchList == 'installed'">
-      <div v-if="installedExtension.size" v-for="(v, k) in installedExtension" :key="k">
-        <div class="Extension">
-          <div class="icon" :style="`background-image:url(${v[1].icon})`"></div>
-          <div class="info">
-            <div>
-              {{ v[1].name }} <span class="tag">{{ v[1].version }}</span>
-              <span class="tag" v-if="!extensionStore.extensionManage.isLoad(v[1].package)">安装错误</span>
+      <div v-if="installedExtension.size">
+        <div v-for="(v, k) in installedExtension" :key="k">
+          <div class="Extension">
+            <div
+              class="icon"
+              :style="`background-image:url(${v[1].icon})`"
+            ></div>
+            <div class="info">
+              <div>
+                {{ v[1].name }} <span class="tag">{{ v[1].version }}</span>
+                <span
+                  class="tag"
+                  v-if="!extensionStore.extensionManage.isLoad(v[1].package)"
+                  >安装错误</span
+                >
+              </div>
+              <div class="desc">{{ v[1].package }}</div>
             </div>
-            <div class="desc">{{ v[1].package }}</div>
-          </div>
-          <div class="install" @click="getInstalledExtension">
-            <button class="uninstall" v-if="extensionStore.isInstall(v[1])"
-              @click="extensionStore.uninstallExtension(v[1].package)">
-              <IconRemove />
-            </button>
+            <div class="install" @click="getInstalledExtension">
+              <button
+                class="uninstall"
+                v-if="extensionStore.isInstall(v[1])"
+                @click="extensionStore.uninstallExtension(v[1].package)"
+              >
+                <IconRemove />
+              </button>
+            </div>
           </div>
         </div>
       </div>

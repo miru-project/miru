@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { ExtensionManage } from "@/ExtensionManage";
 import { encode } from "js-base64";
@@ -6,29 +6,33 @@ import { encode } from "js-base64";
 // 管理存储扩展
 
 export const useMiruExtensionStore = defineStore("Extension", () => {
-  const extensionManage = ref<ExtensionManage>(new ExtensionManage())
-  const installComplete = ref(false)
+  const extensionManage = ref<ExtensionManage>(new ExtensionManage());
+  const installComplete = ref(false);
   // 初始化 加载已存储的扩展
   const initExtensions = () => {
-    const localExtensions = listExtensions()
-    let count = 0
-    let needLoadExtensionCount = localExtensions.size
+    const localExtensions = listExtensions();
+    let count = 0;
+    let needLoadExtensionCount = localExtensions.size;
     if (!needLoadExtensionCount) {
-      installComplete.value = true
+      installComplete.value = true;
     }
     localExtensions.forEach((e: any) => {
-      const dataBase64 = `data:text/javascript;base64,${encode(e.script)}`
-      extensionManage.value.load(e.package, dataBase64).then(() => {
-        count++
-      }).catch((error) => {
-        needLoadExtensionCount--
-        console.log(error);
-        alert(`${e.package} 扩展安装错误: \n ${error}`)
-      }).finally(() => {
-        if (count == needLoadExtensionCount) {
-          installComplete.value = true
-        }
-      })
+      const dataBase64 = `data:text/javascript;base64,${encode(e.script)}`;
+      extensionManage.value
+        .load(e.package, dataBase64)
+        .then(() => {
+          count++;
+        })
+        .catch((error) => {
+          needLoadExtensionCount--;
+          console.log(error);
+          alert(`${e.package} 扩展安装错误: \n ${error}`);
+        })
+        .finally(() => {
+          if (count == needLoadExtensionCount) {
+            installComplete.value = true;
+          }
+        });
     });
   };
 
@@ -66,9 +70,11 @@ export const useMiruExtensionStore = defineStore("Extension", () => {
     const obj = Object.fromEntries(localExtension);
     localStorage.setItem("Extensions", JSON.stringify(Object.entries(obj)));
     // 装载扩展
-    extensionManage.value.load(Extension.package, `data:text/javascript;base64,${encode(script)}`)
+    extensionManage.value.load(
+      Extension.package,
+      `data:text/javascript;base64,${encode(script)}`
+    );
   };
-
 
   // 卸载扩展
   const uninstallExtension = (pkg: string) => {
@@ -78,7 +84,7 @@ export const useMiruExtensionStore = defineStore("Extension", () => {
     const obj = Object.fromEntries(localExtension);
     localStorage.setItem("Extensions", JSON.stringify(Object.entries(obj)));
     // 卸载扩展
-    extensionManage.value.unload(pkg)
+    extensionManage.value.unload(pkg);
   };
 
   // 从已安装扩展通过包名获取名称

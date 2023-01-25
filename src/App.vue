@@ -9,52 +9,54 @@ import { ref, onMounted } from "vue";
 import IconMenu from "./components/icons/IconMenu.vue";
 import IconTips from "./components/IconTips.vue";
 const showSidebar = ref(false);
-const extensionStore = useMiruExtensionStore()
+const extensionStore = useMiruExtensionStore();
 onMounted(() => {
   extensionStore.initExtensions();
 });
 </script>
 
 <template>
-  <nav :class="{ sidebar: true, showSidebar }" @click="showSidebar = false">
-    <div class="logo"><img src="/logo.svg" /></div>
-    <ul>
-      <RouterLink to="/">
-        <li class="love">
-          <span class="icon">
-            <IconLoveVue />
-          </span>收藏
-        </li>
-      </RouterLink>
-      <RouterLink to="/search">
-        <li class="search">
-          <span class="icon search">
-            <IconSearchVue />
-          </span>搜索
-        </li>
-      </RouterLink>
-      <RouterLink to="/extension">
-        <li class="extension">
-          <span class="icon extension">
-            <IconExtensionVue />
-          </span>扩展
-        </li>
-      </RouterLink>
-      <RouterLink to="/settings">
-        <li class="settings">
-          <span class="icon settings">
-            <IconSettingsVue />
-          </span>设置
-        </li>
-      </RouterLink>
-    </ul>
-  </nav>
-  <nav class="mobile">
-    <div class="logo" @click="$router.push('/')"><img src="/logo.svg" /></div>
-    <div @click="showSidebar = !showSidebar">
-      <IconMenu></IconMenu>
-    </div>
-  </nav>
+  <header>
+    <nav :class="{ sidebar: true, showSidebar }" @click="showSidebar = false">
+      <div class="logo"><img src="/logo.svg" alt="logo"/></div>
+      <ul>
+        <RouterLink to="/">
+          <li class="love">
+            <span class="icon">
+              <IconLoveVue />
+            </span>收藏
+          </li>
+        </RouterLink>
+        <RouterLink to="/search">
+          <li class="search">
+            <span class="icon search">
+              <IconSearchVue />
+            </span>搜索
+          </li>
+        </RouterLink>
+        <RouterLink to="/extension">
+          <li class="extension">
+            <span class="icon extension">
+              <IconExtensionVue />
+            </span>扩展
+          </li>
+        </RouterLink>
+        <RouterLink to="/settings">
+          <li class="settings">
+            <span class="icon settings">
+              <IconSettingsVue />
+            </span>设置
+          </li>
+        </RouterLink>
+      </ul>
+    </nav>
+    <nav class="mobile">
+      <div class="logo" @click="$router.push('/')"><img src="/logo.svg" alt="logo" /></div>
+      <div @click="showSidebar = !showSidebar">
+        <IconMenu></IconMenu>
+      </div>
+    </nav>
+  </header>
   <div class="content">
     <div v-if="extensionStore.installComplete">
       <RouterView v-slot="{ Component }">

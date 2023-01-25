@@ -7,8 +7,8 @@ const love = useLoveStore();
 </script>
 <template>
   <div>
-    <div class="grid">
-      <div v-if="prop.list && prop.list.length" v-for="(v, k) in prop.list" :key="k">
+    <div class="grid" v-if="prop.list && prop.list.length">
+      <div v-for="(v, k) in prop.list" :key="k">
         <div class="img">
           <RouterLink :to="`/watch?p=${v.pkg}&u=${v.url}`">
             <img referrerpolicy="no-referrer" :src="v.cover" />

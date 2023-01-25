@@ -23,7 +23,7 @@ onMounted(async () => {
   try {
     data.value = await extension.info(url);
   } catch (error) {
-    errMsg.value = error
+    errMsg.value = error;
   }
   bangumi.value = {
     pkg,
@@ -73,8 +73,12 @@ const jump = (url: string) => {
           <h2>{{ v[0] }}</h2>
           <div class="urls">
             <ul>
-              <li v-for="(vi, ki) in v[1]" :class="{ activate: playurl == vi.url }" :key="ki"
-                @click="(playurl = vi.url) && play(vi.url)">
+              <li
+                v-for="(vi, ki) in v[1]"
+                :class="{ activate: playurl == vi.url }"
+                :key="ki"
+                @click="(playurl = vi.url) && play(vi.url)"
+              >
                 {{ vi.name }}
               </li>
             </ul>
@@ -99,7 +103,6 @@ const jump = (url: string) => {
   justify-content: center;
   align-items: center;
 }
-
 
 .info {
   display: flex;

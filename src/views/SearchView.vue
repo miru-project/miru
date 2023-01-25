@@ -18,8 +18,9 @@ const search = async (pkg: string) => {
   try {
     data.length = 0;
     const res =
-      ((await extensionStore.extensionManage.getExtension(pkg).search(kw.value, page.value)) as never[]) ??
-      [];
+      ((await extensionStore.extensionManage
+        .getExtension(pkg)
+        .search(kw.value, page.value)) as never[]) ?? [];
     res.forEach((e: any) => {
       e.pkg = pkg;
     });
@@ -38,7 +39,10 @@ const getNew = async (pkg: string) => {
   loading.value = true;
   data.length = 0;
   try {
-    const res = ((await extensionStore.extensionManage.getExtension(pkg).latest()) as never[]) ?? [];
+    const res =
+      ((await extensionStore.extensionManage
+        .getExtension(pkg)
+        .latest()) as never[]) ?? [];
     res.forEach((e: any) => {
       e.pkg = pkg;
     });
@@ -58,28 +62,42 @@ onMounted(() => {
     }
   });
   getNew(activeExtension.value);
-})
+});
 </script>
 
 <template>
   <main>
     <h1 class="page-title">搜索</h1>
     <form @submit.prevent="search(activeExtension)">
-      <input type="text" id="search" v-model="kw" @input="!kw ? getNew(activeExtension) : false"
-        placeholder="找点什么好康的呢？" />
+      <input
+        type="text"
+        id="search"
+        v-model="kw"
+        @input="!kw ? getNew(activeExtension) : false"
+        placeholder="找点什么好康的呢？"
+      />
     </form>
     <div v-if="extensionStore.extensionManage.Extensions.size">
       <div class="switch">
-        <button v-for="(v, k) in extensionStore.extensionManage.Extensions"
+        <button
+          v-for="(v, k) in extensionStore.extensionManage.Extensions"
           :class="{ activit: activeExtension == v[0] }"
-          @click="(activeExtension = v[0]) && (kw ? search(v[0]) : getNew(v[0]))" :key="k">
+          @click="
+            (activeExtension = v[0]) && (kw ? search(v[0]) : getNew(v[0]))
+          "
+          :key="k"
+        >
           {{ extensionStore.getNameforPackge(v[0]) }}
         </button>
       </div>
       <h3 v-if="!kw">最近更新</h3>
       <div>
-        <GridList v-if="extensionStore.getNameforPackge(activeExtension) ?? false" :list="data" :loading="loading"
-          :nodata="nodata">
+        <GridList
+          v-if="extensionStore.getNameforPackge(activeExtension) ?? false"
+          :list="data"
+          :loading="loading"
+          :nodata="nodata"
+        >
         </GridList>
       </div>
     </div>

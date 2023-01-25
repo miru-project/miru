@@ -36,7 +36,11 @@ kkkkkkkbbbbbbbbbbbkkkkkbkm                 kbkkkkkbbbbbbbbbbbbkkkkkkkbbbbbbbbbbb
 kkkkkkkkkkkkkkkkkkkkkkkkk                  bkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 `);
 
-console.log(`%c Miru v${config.version} %c https://github.com/miru-project/miru `, 'color: #fff;font-weight: 900;; background-color: rgb(246, 0, 78); padding:5px 0;', 'background-color: rgb(255, 219, 219); padding:5px 0;');
+console.log(
+  `%c Miru v${config.version} %c https://github.com/miru-project/miru `,
+  "color: #fff;font-weight: 900;; background-color: rgb(246, 0, 78); padding:5px 0;",
+  "background-color: rgb(255, 219, 219); padding:5px 0;"
+);
 
 app.use(createPinia());
 app.use(router);
