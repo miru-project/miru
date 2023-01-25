@@ -23,7 +23,7 @@ const search = async (time: number, pkg: string) => {
   loading.value = true;
   needData.value = false;
   if (time != key.value) {
-    page.value = 0;
+    page.value = 1;
   }
   key.value = time;
   errMsg.value = "";
@@ -58,9 +58,6 @@ const getNew = async (time: number, pkg: string) => {
   isSearch.value = false;
   nodata.value = false;
   loading.value = true;
-  if (time != key.value) {
-    page.value = 0;
-  }
   key.value = time;
   errMsg.value = "";
   try {
