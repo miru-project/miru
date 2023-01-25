@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import GridListVue from "@/components/GridList.vue";
 import { useLoveStore } from "@/stores/love";
-import IconInfo from "@/components/icons/IconInfo.vue";
 import IconTips from "@/components/IconTips.vue";
 
 const love = useLoveStore();

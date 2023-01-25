@@ -2,26 +2,31 @@
 import IconLove from "./icons/IconLove.vue";
 import { useLoveStore } from "@/stores/love";
 import LoadingVue from "./Loading.vue";
-const prop = defineProps(["list", "loading", "nodata"]);
+import IconTips from "./IconTips.vue";
+const prop = defineProps(["list", "loading", "nodata", "error-msg"]);
 const love = useLoveStore();
 </script>
 <template>
   <div>
-    <div class="grid">
-      <div v-if="prop.list && prop.list.length" v-for="(v, k) in prop.list" :key="k">
+    <div class="grid" v-if="prop.list && prop.list.length">
+      <div v-for="(v, k) in prop.list" :key="k">
         <div class="img">
           <RouterLink :to="`/watch?p=${v.pkg}&u=${v.url}`">
             <img referrerpolicy="no-referrer" :src="v.cover" />
           </RouterLink>
           <div class="love">
-            <IconLove @click="love.loveOrUnLove(v)" :fill="love.exist(v)"></IconLove>
+            <IconLove
+              @click="love.loveOrUnLove(v)"
+              :fill="love.exist(v)"
+            ></IconLove>
           </div>
         </div>
         <p>{{ v.title }}</p>
       </div>
     </div>
-    <div v-if="prop.loading">
-      <LoadingVue></LoadingVue>
+    <div v-if="prop.loading" style="margin-top: 100px; margin-bottom: 100px">
+      <IconTips :text="prop['error-msg']" v-if="prop['error-msg']"></IconTips>
+      <LoadingVue v-else></LoadingVue>
     </div>
     <div v-if="nodata">
       <p>没有记录力~</p>
@@ -39,7 +44,7 @@ const love = useLoveStore();
     color: #000;
   }
 
-  &>div {
+  & > div {
     transition: all 0.1s;
 
     img {
@@ -84,7 +89,7 @@ const love = useLoveStore();
   .grid {
     grid-template-columns: repeat(4, 1fr);
 
-    &>div {
+    & > div {
       .img {
         height: 22vw;
       }
@@ -96,7 +101,7 @@ const love = useLoveStore();
   .grid {
     grid-template-columns: repeat(3, 1fr);
 
-    &>div {
+    & > div {
       .img {
         height: 44vw;
       }
@@ -108,7 +113,7 @@ const love = useLoveStore();
   .grid {
     grid-template-columns: repeat(2, 1fr);
 
-    &>div {
+    & > div {
       .img {
         height: 55vw;
       }

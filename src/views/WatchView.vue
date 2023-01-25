@@ -8,6 +8,7 @@ import { useLoveStore } from "@/stores/love";
 import Player from "@/components/Player.vue";
 import Loading from "@/components/Loading.vue";
 import AlertVue from "@/components/IconTips.vue";
+import IconTips from "@/components/IconTips.vue";
 
 const love = useLoveStore();
 const pkg = String(useRoute().query.p);
@@ -23,7 +24,7 @@ onMounted(async () => {
   try {
     data.value = await extension.info(url);
   } catch (error) {
-    errMsg.value = error
+    errMsg.value = error;
   }
   bangumi.value = {
     pkg,
@@ -48,7 +49,11 @@ const jump = (url: string) => {
 </script>
 <template>
   <main>
-    <div v-if="!extension">丢失扩展 "{{ useRoute().query.p }}"</div>
+    <div class="full-screen-center" v-if="!extension">
+      <IconTips
+        :text="`丢失扩展 ${useRoute().query.p} 请检查扩展是否已经安装`"
+      ></IconTips>
+    </div>
     <div v-else-if="data">
       <Player class="player" v-if="watchData" :options="watchData" />
       <div class="info">
@@ -73,8 +78,12 @@ const jump = (url: string) => {
           <h2>{{ v[0] }}</h2>
           <div class="urls">
             <ul>
-              <li v-for="(vi, ki) in v[1]" :class="{ activate: playurl == vi.url }" :key="ki"
-                @click="(playurl = vi.url) && play(vi.url)">
+              <li
+                v-for="(vi, ki) in v[1]"
+                :class="{ activate: playurl == vi.url }"
+                :key="ki"
+                @click="(playurl = vi.url) && play(vi.url)"
+              >
                 {{ vi.name }}
               </li>
             </ul>
@@ -99,7 +108,6 @@ const jump = (url: string) => {
   justify-content: center;
   align-items: center;
 }
-
 
 .info {
   display: flex;
@@ -152,7 +160,7 @@ const jump = (url: string) => {
 }
 
 .watchurl {
-  margin-top: 50px;
+  margin-top: 16px;
 }
 
 .urls {

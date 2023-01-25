@@ -10,6 +10,13 @@
     }
 }
 
+.full-screen-center {
+    display: flex;
+    height: var(--fullHeightScreen);
+    justify-content: center;
+    align-items: center;
+}
+
 body {
     margin: 0;
 }
