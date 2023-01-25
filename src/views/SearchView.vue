@@ -1,57 +1,84 @@
 <script setup lang="ts">
 import GridList from "@/components/GridList.vue";
+import IconTips from "@/components/IconTips.vue";
+import ScrollBottomContainer from "@/components/ScrollBottomContainer.vue";
 import { useMiruExtensionStore } from "@/stores/extension";
 import { ref, reactive, onMounted } from "vue";
 
 const extensionStore = useMiruExtensionStore();
 const kw = ref();
 const page = ref(1);
-const searched = ref(false);
+const isSearch = ref(false);
 const activeExtension = ref();
-const data = reactive([]);
 const loading = ref(false);
 const nodata = ref(false);
+const needData = ref(true);
+const data = ref<Map<number, []>>(new Map());
+const key = ref<number>(0);
+const errMsg = ref();
 
-const search = async (pkg: string) => {
+const search = async (time: number, pkg: string) => {
+  isSearch.value = true;
   nodata.value = false;
   loading.value = true;
+  needData.value = false;
+  if (time != key.value) {
+    page.value = 0;
+  }
+  key.value = time;
+  errMsg.value = "";
+  let res = [];
   try {
-    data.length = 0;
-    const res =
-      ((await extensionStore.extensionManage
-        .getExtension(pkg)
-        .search(kw.value, page.value)) as never[]) ?? [];
+    res = (await extensionStore.extensionManage
+      .getExtension(pkg)
+      .search(kw.value, page.value++)) as [];
     res.forEach((e: any) => {
       e.pkg = pkg;
     });
-    data.push(...res);
+    const temp = data.value.get(time) ?? [];
+    temp.push(...res);
+    data.value.set(time, temp);
   } catch (error) {
-    console.log(error);
-  } finally {
-    searched.value = true;
+    errMsg.value = error;
+  }
+  if (time == key.value) {
     loading.value = false;
-    nodata.value = true;
+    if (!res.length) {
+      nodata.value = true;
+      if (time == key.value) {
+        needData.value = false;
+        return;
+      }
+    }
+    needData.value = true;
   }
 };
 
-const getNew = async (pkg: string) => {
+const getNew = async (time: number, pkg: string) => {
+  isSearch.value = false;
   nodata.value = false;
   loading.value = true;
-  data.length = 0;
+  if (time != key.value) {
+    page.value = 0;
+  }
+  key.value = time;
+  errMsg.value = "";
   try {
-    const res =
-      ((await extensionStore.extensionManage
-        .getExtension(pkg)
-        .latest()) as never[]) ?? [];
+    const res = (await extensionStore.extensionManage
+      .getExtension(pkg)
+      .latest()) as [];
     res.forEach((e: any) => {
       e.pkg = pkg;
     });
-    data.push(...res);
+    if (!res) {
+      nodata.value = true;
+    }
+    data.value.set(time, res);
   } catch (error: any) {
-    console.log(error);
-  } finally {
+    errMsg.value = error;
+  }
+  if (time == key.value) {
     loading.value = false;
-    nodata.value = true;
   }
 };
 
@@ -61,50 +88,59 @@ onMounted(() => {
       activeExtension.value = k;
     }
   });
-  getNew(activeExtension.value);
+  getNew(Math.random(), activeExtension.value);
 });
 </script>
 
 <template>
-  <main>
-    <h1 class="page-title">搜索</h1>
-    <form @submit.prevent="search(activeExtension)">
-      <input
-        type="text"
-        id="search"
-        v-model="kw"
-        @input="!kw ? getNew(activeExtension) : false"
-        placeholder="找点什么好康的呢？"
-      />
-    </form>
+  <div>
     <div v-if="extensionStore.extensionManage.Extensions.size">
-      <div class="switch">
-        <button
-          v-for="(v, k) in extensionStore.extensionManage.Extensions"
-          :class="{ activit: activeExtension == v[0] }"
-          @click="
-            (activeExtension = v[0]) && (kw ? search(v[0]) : getNew(v[0]))
-          "
-          :key="k"
-        >
-          {{ extensionStore.getNameforPackge(v[0]) }}
-        </button>
-      </div>
-      <h3 v-if="!kw">最近更新</h3>
+      <h1 class="page-title">搜索</h1>
+      <form @submit.prevent="search(Math.random(), activeExtension)">
+        <input
+          type="text"
+          id="search"
+          v-model="kw"
+          @input="!kw ? getNew(Math.random(), activeExtension) : false"
+          placeholder="找点什么好康的呢？"
+        />
+      </form>
       <div>
-        <GridList
-          v-if="extensionStore.getNameforPackge(activeExtension) ?? false"
-          :list="data"
-          :loading="loading"
-          :nodata="nodata"
-        >
-        </GridList>
+        <div class="switch">
+          <button
+            v-for="(v, k) in extensionStore.extensionManage.Extensions"
+            :class="{ activit: activeExtension == v[0] }"
+            @click="
+              (activeExtension = v[0]) &&
+                (kw ? search(Math.random(), v[0]) : getNew(Math.random(), v[0]))
+            "
+            :key="k"
+          >
+            {{ extensionStore.getNameforPackge(v[0]) }}
+          </button>
+        </div>
+        <h3 v-if="!kw">最近更新</h3>
+        <div>
+          <ScrollBottomContainer
+            tolerance="100"
+            :need-data="needData"
+            @is-bottom="isSearch ? search(key, activeExtension) : false"
+          >
+            <GridList
+              :list="data.get(key)"
+              :error-msg="errMsg"
+              :loading="loading"
+              :nodata="nodata"
+            >
+            </GridList>
+          </ScrollBottomContainer>
+        </div>
       </div>
     </div>
-    <div v-else>
-      <p>没有扩展哦</p>
+    <div class="full-screen-center" v-else>
+      <IconTips text="暂无扩展"></IconTips>
     </div>
-  </main>
+  </div>
 </template>
 <style lang="scss" scoped>
 input {

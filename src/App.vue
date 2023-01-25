@@ -18,40 +18,34 @@ onMounted(() => {
 <template>
   <header>
     <nav :class="{ sidebar: true, showSidebar }" @click="showSidebar = false">
-      <div class="logo"><img src="/logo.svg" alt="logo"/></div>
+      <div class="logo"><img src="/logo.svg" alt="logo" /></div>
       <ul>
         <RouterLink to="/">
           <li class="love">
-            <span class="icon">
-              <IconLoveVue />
-            </span>收藏
+            <span class="icon"> <IconLoveVue /> </span>收藏
           </li>
         </RouterLink>
         <RouterLink to="/search">
           <li class="search">
-            <span class="icon search">
-              <IconSearchVue />
-            </span>搜索
+            <span class="icon search"> <IconSearchVue /> </span>搜索
           </li>
         </RouterLink>
         <RouterLink to="/extension">
           <li class="extension">
-            <span class="icon extension">
-              <IconExtensionVue />
-            </span>扩展
+            <span class="icon extension"> <IconExtensionVue /> </span>扩展
           </li>
         </RouterLink>
         <RouterLink to="/settings">
           <li class="settings">
-            <span class="icon settings">
-              <IconSettingsVue />
-            </span>设置
+            <span class="icon settings"> <IconSettingsVue /> </span>设置
           </li>
         </RouterLink>
       </ul>
     </nav>
     <nav class="mobile">
-      <div class="logo" @click="$router.push('/')"><img src="/logo.svg" alt="logo" /></div>
+      <div class="logo" @click="$router.push('/')">
+        <img src="/logo.svg" alt="logo" />
+      </div>
       <div @click="showSidebar = !showSidebar">
         <IconMenu></IconMenu>
       </div>
