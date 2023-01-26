@@ -3,7 +3,7 @@ import GridList from "@/components/GridList.vue";
 import IconTips from "@/components/IconTips.vue";
 import ScrollBottomContainer from "@/components/ScrollBottomContainer.vue";
 import { useMiruExtensionStore } from "@/stores/extension";
-import { ref, reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 const extensionStore = useMiruExtensionStore();
 const kw = ref();
