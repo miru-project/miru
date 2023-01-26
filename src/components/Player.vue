@@ -85,20 +85,9 @@ onUnmounted(() => {
 <template>
   <div class="player">
     <div v-if="props.options.type == 'iframe'">
-      <iframe
-        referrerpolicy="no-referrer"
-        :src="props.options.src"
-        height="100%"
-        width="100%"
-        class="iframe"
-        scrolling="no"
-        allowfullscreen="true"
-        allowtransparency="true"
-        frameborder="no"
-        border="0"
-        marginwidth="0"
-        marginheight="0"
-      ></iframe>
+      <iframe referrerpolicy="no-referrer" :src="props.options.src" height="100%" width="100%" class="iframe"
+        scrolling="no" allowfullscreen="true" allowtransparency="true" frameborder="no" border="0" marginwidth="0"
+        marginheight="0"></iframe>
     </div>
     <div v-if="props.options.type == 'player'">
       <div id="artPlayer" ref="artRef"></div>
@@ -110,5 +99,12 @@ onUnmounted(() => {
 #artPlayer {
   max-height: 600px;
   height: 50vw;
+}
+
+@media screen and (max-width: 1024px) {
+  .iframe,
+  #artPlayer {
+    margin: -20px -20px 0 -20px ;
+  }
 }
 </style>
