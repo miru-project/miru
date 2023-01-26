@@ -9,10 +9,12 @@ import Player from "@/components/Player.vue";
 import Loading from "@/components/Loading.vue";
 import AlertVue from "@/components/IconTips.vue";
 import IconTips from "@/components/IconTips.vue";
+import { useProgressStore } from "@/stores/progress";
 
 const love = useLoveStore();
 const pkg = String(useRoute().query.p);
 const extension = useMiruExtensionStore().extensionManage.getExtension(pkg);
+const progress = useProgressStore()
 const data = ref();
 const url = String(useRoute().query.u);
 const playurl = ref();
@@ -23,6 +25,10 @@ const errMsg = ref();
 onMounted(async () => {
   try {
     data.value = await extension.info(url);
+    const watchProgress = progress.getProgress(pkg, url)
+    if (watchProgress) {
+      play(watchProgress.watchUrl)
+    }
   } catch (error) {
     errMsg.value = error;
   }
@@ -34,13 +40,19 @@ onMounted(async () => {
   };
 });
 
-const play = async (url: string) => {
+const play = async (watchUrl: string) => {
+  playurl.value = watchUrl
   window.scrollTo({
     top: 0,
     left: 0,
     behavior: "smooth",
   });
-  watchData.value = await extension.watch(url);
+  watchData.value = await extension.watch(watchUrl);
+  progress.setProgress({
+    pkg,
+    url,
+    watchUrl
+  })
 };
 
 const jump = (url: string) => {
@@ -50,9 +62,7 @@ const jump = (url: string) => {
 <template>
   <main>
     <div class="full-screen-center" v-if="!extension">
-      <IconTips
-        :text="`丢失扩展 ${useRoute().query.p} 请检查扩展是否已经安装`"
-      ></IconTips>
+      <IconTips :text="`丢失扩展 ${useRoute().query.p} 请检查扩展是否已经安装`"></IconTips>
     </div>
     <div v-else-if="data">
       <Player class="player" v-if="watchData" :options="watchData" />
@@ -75,15 +85,10 @@ const jump = (url: string) => {
       </div>
       <div class="watchurl">
         <div v-for="(v, k) in data.watchurl" :key="k">
-          <h2>{{ v[0] }}</h2>
+          <h3>{{ v[0] }}</h3>
           <div class="urls">
             <ul>
-              <li
-                v-for="(vi, ki) in v[1]"
-                :class="{ activate: playurl == vi.url }"
-                :key="ki"
-                @click="(playurl = vi.url) && play(vi.url)"
-              >
+              <li v-for="(vi, ki) in v[1]" :class="{ activate: playurl == vi.url }" :key="ki" @click="play(vi.url)">
                 {{ vi.name }}
               </li>
             </ul>
