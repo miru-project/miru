@@ -68,7 +68,7 @@ getUpdate();
             }}
           </span>
           <span>
-            {{ v.update ?? updateMsgs.get(v.url) ?? "loading..." }}
+            {{ v.update ?? updateMsgs.get(v.url) }}
           </span>
         </p>
       </div>
@@ -88,9 +88,9 @@ getUpdate();
 }
 
 .subtitle {
-  font-size: 10px;
-  margin-top: 8px;
-  color: hsl(0, 0%, 21%);
+  font-size: 12px;
+  margin-top: 3px;
+  color: hsl(0, 0%, 60%);
 }
 
 .grid {
