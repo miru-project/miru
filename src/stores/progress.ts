@@ -6,12 +6,16 @@ export const useProgressStore = defineStore("progress", () => {
     pkg: string;
     url: string;
     watchUrl: string;
+    watchName: string | undefined;
   };
   const list = reactive<Array<progress>>(
     JSON.parse(localStorage.getItem("progress") as string) ?? []
   );
   const setProgress = (progress: progress) => {
     if (!progress) {
+      return;
+    }
+    if (!progress.watchName) {
       return;
     }
     const existsProgressIndex = list.findIndex(

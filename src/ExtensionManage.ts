@@ -36,6 +36,9 @@ class Extension {
   latest(): unknown {
     throw new Error("not implement");
   }
+  checkUpdate(url: string): string {
+    return "";
+  }
 }
 
 window.Extension = Extension;
