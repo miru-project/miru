@@ -3,8 +3,38 @@ import IconLove from "./icons/IconLove.vue";
 import { useLoveStore } from "@/stores/love";
 import LoadingVue from "./Loading.vue";
 import IconTips from "./IconTips.vue";
+import { useProgressStore } from "@/stores/progress";
+import { useMiruExtensionStore } from "@/stores/extension";
+import { watch, ref } from "vue";
+
 const prop = defineProps(["list", "loading", "nodata", "error-msg"]);
 const love = useLoveStore();
+const progress = useProgressStore();
+const extension = useMiruExtensionStore();
+const updateMsgs = ref<Map<string, string>>(new Map());
+
+watch(
+  () => prop.list,
+  () => {
+    getUpdate();
+  }
+);
+
+const getUpdate = () => {
+  if (prop.list) {
+    prop.list.forEach(
+      async (e: { pkg: string; url: string; update: string }) => {
+        if (!e.update) {
+          const res = await extension.extensionManage
+            .getExtension(e.pkg)
+            .checkUpdate(e.url);
+          updateMsgs.value.set(e.url, res);
+        }
+      }
+    );
+  }
+};
+getUpdate();
 </script>
 <template>
   <div>
@@ -16,12 +46,31 @@ const love = useLoveStore();
           </RouterLink>
           <div class="love">
             <IconLove
-              @click="love.loveOrUnLove(v)"
+              @click="
+                love.loveOrUnLove({
+                  pkg: v.pkg,
+                  url: v.url,
+                  cover: v.cover,
+                  title: v.title,
+                })
+              "
               :fill="love.exist(v)"
             ></IconLove>
           </div>
         </div>
-        <p>{{ v.title }}</p>
+        <p class="title">{{ v.title }}</p>
+        <p class="subtitle">
+          <span>
+            {{
+              progress.getProgress(v.pkg, v.url)?.watchName
+                ? `看到${progress.getProgress(v.pkg, v.url)?.watchName} `
+                : " "
+            }}
+          </span>
+          <span>
+            {{ v.update ?? updateMsgs.get(v.url) ?? "loading..." }}
+          </span>
+        </p>
       </div>
     </div>
     <div v-if="prop.loading" style="margin-top: 100px; margin-bottom: 100px">
@@ -34,6 +83,16 @@ const love = useLoveStore();
   </div>
 </template>
 <style lang="scss" scoped>
+.title {
+  margin-bottom: 0;
+}
+
+.subtitle {
+  font-size: 10px;
+  margin-top: 8px;
+  color: hsl(0, 0%, 21%);
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

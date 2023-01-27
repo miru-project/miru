@@ -14,6 +14,9 @@ export const useLoveStore = defineStore("love", () => {
     if (exist(bangumi)) {
       return;
     }
+    if (bangumi.update) {
+      delete bangumi.update;
+    }
     list.value.unshift(bangumi);
     localStorage.setItem("love", JSON.stringify(list.value));
     save();

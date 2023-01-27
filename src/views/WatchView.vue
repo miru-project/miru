@@ -27,7 +27,7 @@ onMounted(async () => {
     data.value = await extension.info(url);
     const watchProgress = progress.getProgress(pkg, url);
     if (watchProgress) {
-      play(watchProgress.watchUrl);
+      play(watchProgress.watchUrl, undefined);
     }
   } catch (error) {
     errMsg.value = error;
@@ -40,7 +40,7 @@ onMounted(async () => {
   };
 });
 
-const play = async (watchUrl: string) => {
+const play = async (watchUrl: string, watchName: string | undefined) => {
   playurl.value = watchUrl;
   window.scrollTo({
     top: 0,
@@ -48,10 +48,12 @@ const play = async (watchUrl: string) => {
     behavior: "smooth",
   });
   watchData.value = await extension.watch(watchUrl);
+  console.log(watchName);
   progress.setProgress({
     pkg,
     url,
     watchUrl,
+    watchName,
   });
 };
 
@@ -94,7 +96,7 @@ const jump = (url: string) => {
                 v-for="(vi, ki) in v[1]"
                 :class="{ activate: playurl == vi.url }"
                 :key="ki"
-                @click="play(vi.url)"
+                @click="play(vi.url, vi.name)"
               >
                 {{ vi.name }}
               </li>
