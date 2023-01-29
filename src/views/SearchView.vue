@@ -80,11 +80,7 @@ const getNew = async (time: number, pkg: string) => {
 };
 
 onMounted(() => {
-  extensionStore.extensionManage.Extensions?.forEach((v, k) => {
-    if (!activeExtension.value) {
-      activeExtension.value = k;
-    }
-  });
+  activeExtension.value = extensionStore.extensionManage.Extensions.keys().next().value
   getNew(Math.random(), activeExtension.value);
 });
 </script>
@@ -94,41 +90,24 @@ onMounted(() => {
     <div v-if="extensionStore.extensionManage.Extensions.size">
       <h1 class="page-title">搜索</h1>
       <form @submit.prevent="search(Math.random(), activeExtension)">
-        <input
-          type="text"
-          id="search"
-          v-model="kw"
-          @input="!kw ? getNew(Math.random(), activeExtension) : false"
-          placeholder="找点什么好康的呢？"
-        />
+        <input type="text" id="search" v-model="kw" @input="!kw ? getNew(Math.random(), activeExtension) : false"
+          placeholder="找点什么好康的呢？" />
       </form>
       <div>
         <div class="switch">
-          <button
-            v-for="(v, k) in extensionStore.extensionManage.Extensions"
-            :class="{ activit: activeExtension == v[0] }"
-            @click="
+          <button v-for="(v, k) in extensionStore.extensionManage.Extensions"
+            :class="{ activit: activeExtension == v[0] }" @click="
               (activeExtension = v[0]) &&
-                (kw ? search(Math.random(), v[0]) : getNew(Math.random(), v[0]))
-            "
-            :key="k"
-          >
+              (kw ? search(Math.random(), v[0]) : getNew(Math.random(), v[0]))
+            " :key="k">
             {{ extensionStore.getNameforPackge(v[0]) }}
           </button>
         </div>
         <h3 v-if="!kw">最近更新</h3>
         <div>
-          <ScrollBottomContainer
-            tolerance="100"
-            :need-data="needData"
-            @is-bottom="isSearch ? search(key, activeExtension) : false"
-          >
-            <GridList
-              :list="data.get(key)"
-              :error-msg="errMsg"
-              :loading="loading"
-              :nodata="nodata"
-            >
+          <ScrollBottomContainer tolerance="100" :need-data="needData"
+            @is-bottom="isSearch ? search(key, activeExtension) : false">
+            <GridList :list="data.get(key)" :error-msg="errMsg" :loading="loading" :nodata="nodata">
             </GridList>
           </ScrollBottomContainer>
         </div>
