@@ -7,6 +7,7 @@ export const useProgressStore = defineStore("progress", () => {
     url: string;
     watchUrl: string;
     watchName: string | undefined;
+    watchGroupName: string | undefined;
   };
   const list = reactive<Array<progress>>(
     JSON.parse(localStorage.getItem("progress") as string) ?? []
