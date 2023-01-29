@@ -15,7 +15,6 @@ const listener = () => {
     props.needData
   ) {
     emit("isBottom");
-    console.log("is bottom");
   }
 };
 onActivated(() => {
