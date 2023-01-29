@@ -30,6 +30,7 @@ img {
     margin: 18px 0px;
     display: flex;
     overflow: auto;
+    
 
     &::-webkit-scrollbar {
         display: none;
@@ -41,7 +42,7 @@ img {
         padding: 8px 15px;
         border-radius: 50px;
         background-color: rgb(238, 238, 238);
-
+        white-space: nowrap;
         cursor: pointer;
         border: 1px solid #fff;
         word-break: keep-all;
