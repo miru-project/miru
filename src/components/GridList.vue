@@ -5,12 +5,12 @@ import LoadingVue from "./Loading.vue";
 import IconTips from "./IconTips.vue";
 import { useProgressStore } from "@/stores/progress";
 import { useMiruExtensionStore } from "@/stores/extension";
-import { watch, ref } from "vue";
+import { watch, ref, onActivated } from "vue";
 
 const prop = defineProps(["list", "loading", "nodata", "error-msg"]);
 const love = useLoveStore();
 const progress = useProgressStore();
-const extension = useMiruExtensionStore();
+const extensionStore = useMiruExtensionStore();
 const updateMsgs = ref<Map<string, string>>(new Map());
 
 watch(
@@ -20,12 +20,16 @@ watch(
   }
 );
 
+onActivated(() => {
+  getUpdate();
+});
+
 const getUpdate = () => {
   if (prop.list) {
     prop.list.forEach(
       async (e: { pkg: string; url: string; update: string }) => {
-        if (!e.update) {
-          const res = await extension.extensionManage
+        if (!e.update && !updateMsgs.value.get(e.url)) {
+          const res = await extensionStore.extensionManage
             .getExtension(e.pkg)
             .checkUpdate(e.url);
           updateMsgs.value.set(e.url, res);
@@ -34,7 +38,6 @@ const getUpdate = () => {
     );
   }
 };
-getUpdate();
 </script>
 <template>
   <div>
@@ -58,19 +61,19 @@ getUpdate();
             ></IconLove>
           </div>
         </div>
-        <p class="title">{{ v.title }}</p>
         <p class="subtitle">
           <span>
             {{
               progress.getProgress(v.pkg, v.url)?.watchName
-                ? `看到${progress.getProgress(v.pkg, v.url)?.watchName} `
-                : " "
+                ? `看到${progress.getProgress(v.pkg, v.url)?.watchName} | `
+                : ""
             }}
           </span>
           <span>
-            {{ v.update ?? updateMsgs.get(v.url) ?? "loading..." }}
+            {{ v.update ?? updateMsgs.get(v.url) }}
           </span>
         </p>
+        <p class="title">{{ v.title }}</p>
       </div>
     </div>
     <div v-if="prop.loading" style="margin-top: 100px; margin-bottom: 100px">
@@ -84,13 +87,13 @@ getUpdate();
 </template>
 <style lang="scss" scoped>
 .title {
-  margin-bottom: 0;
+  margin-top: 5px;
 }
 
 .subtitle {
-  font-size: 10px;
-  margin-top: 8px;
-  color: hsl(0, 0%, 21%);
+  margin-bottom: 0;
+  font-size: 13px;
+  color: hsl(0, 0%, 60%);
 }
 
 .grid {

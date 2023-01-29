@@ -77,7 +77,7 @@ const jump = (url: string) => {
             {{ data.title }}
           </div>
           <div class="desc-text">{{ data.desc }}</div>
-          <div>
+          <div class="botton-group">
             <button @click="love.loveOrUnLove(bangumi)">
               <IconLoveVue :fill="love.exist(bangumi)"> </IconLoveVue>
             </button>
@@ -149,6 +149,10 @@ const jump = (url: string) => {
     word-break: break-all;
   }
 
+  .botton-group {
+    display: flex;
+  }
+
   button {
     padding: 0;
     border: unset;
@@ -158,13 +162,10 @@ const jump = (url: string) => {
     width: 50px;
     border-radius: 100%;
     background-color: rgb(255, 233, 233);
-    // background-color: unset;
     cursor: pointer;
-
-    &:hover {
-      background-color: rgb(255, 233, 233);
-    }
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     svg {
       fill: rgb(246, 0, 78);
       height: 30px;
