@@ -1,6 +1,6 @@
 {
   "name": "miru",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "private": true,
   "scripts": {
     "dev": "vite --mode development",
@@ -11,7 +11,6 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@types/dplayer": "^1.25.2",
     "artplayer": "^4.6.2",
     "dashjs": "^4.5.2",
     "hls.js": "^1.2.9",
