@@ -1,3 +1,5 @@
+<img align="right" width="300" src="./public/miru.png" alt="Miru 看板娘"/>
+
 # <img src="./public/logo.svg" width="100">
 
 ***一个支持扩展视频源的在线影视播放器**(?)，灵感来自 [Tachiyomi](https://tachiyomi.org/)*

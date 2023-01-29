@@ -10,24 +10,25 @@ import Loading from "@/components/Loading.vue";
 import AlertVue from "@/components/IconTips.vue";
 import IconTips from "@/components/IconTips.vue";
 import { useProgressStore } from "@/stores/progress";
+import Episodes from "@/components/Episodes.vue";
 
 const love = useLoveStore();
 const pkg = String(useRoute().query.p);
 const extension = useMiruExtensionStore().extensionManage.getExtension(pkg);
-const progress = useProgressStore();
 const data = ref();
 const url = String(useRoute().query.u);
 const playurl = ref();
 const bangumi = ref({});
 const watchData = ref();
 const errMsg = ref();
+const progress = useProgressStore();
+const watchProgress = progress.getProgress(pkg, url);
 
 onMounted(async () => {
   try {
     data.value = await extension.info(url);
-    const watchProgress = progress.getProgress(pkg, url);
     if (watchProgress) {
-      play(watchProgress.watchUrl, undefined);
+      play(watchProgress.watchUrl, undefined, undefined);
     }
   } catch (error) {
     errMsg.value = error;
@@ -40,7 +41,11 @@ onMounted(async () => {
   };
 });
 
-const play = async (watchUrl: string, watchName: string | undefined) => {
+const play = async (
+  watchUrl: string,
+  watchName: string | undefined,
+  watchGroupName: string | undefined
+) => {
   playurl.value = watchUrl;
   window.scrollTo({
     top: 0,
@@ -54,6 +59,7 @@ const play = async (watchUrl: string, watchName: string | undefined) => {
     url,
     watchUrl,
     watchName,
+    watchGroupName,
   });
 };
 
@@ -88,21 +94,13 @@ const jump = (url: string) => {
         </div>
       </div>
       <div class="watchurl">
-        <div v-for="(v, k) in data.watchurl" :key="k">
-          <h3>{{ v[0] }}</h3>
-          <div class="urls">
-            <ul>
-              <li
-                v-for="(vi, ki) in v[1]"
-                :class="{ activate: playurl == vi.url }"
-                :key="ki"
-                @click="play(vi.url, vi.name)"
-              >
-                {{ vi.name }}
-              </li>
-            </ul>
-          </div>
-        </div>
+        <h2>选集</h2>
+        <Episodes
+          :data="data.watchurl"
+          @play="play"
+          :first-key="watchProgress?.watchGroupName"
+          :first-url="watchProgress?.watchUrl"
+        ></Episodes>
       </div>
     </div>
     <div v-else class="tips">
@@ -166,6 +164,7 @@ const jump = (url: string) => {
     display: flex;
     justify-content: center;
     align-items: center;
+
     svg {
       fill: rgb(246, 0, 78);
       height: 30px;
@@ -176,33 +175,8 @@ const jump = (url: string) => {
 
 .watchurl {
   margin-top: 16px;
-}
-
-.urls {
-  max-height: 300px;
-  overflow: auto;
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
-      color: #000;
-      padding: 5px 10px;
-      background-color: #e5e5e5;
-      text-decoration: none;
-      border-radius: 10px;
-      cursor: pointer;
-
-      &.activate {
-        background-color: rgb(255, 219, 219);
-        color: rgb(246, 0, 78);
-      }
-    }
+  h2 {
+    font-weight: 400;
   }
 }
 

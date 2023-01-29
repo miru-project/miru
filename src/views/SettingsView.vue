@@ -30,7 +30,7 @@ const readSettings = () => {
 readSettings();
 </script>
 <template>
-  <main>
+  <div class="setting">
     <h1 class="page-title">设置</h1>
     <div class="content">
       <h3>Miru-Proxy</h3>
@@ -56,6 +56,11 @@ readSettings();
         </button>
       </div>
       <h2>关于</h2>
+      <img
+        src="/public/logo.svg"
+        style="width: 80px; display: block; border-radius: 0"
+        alt="logo"
+      />
       当前版本：v{{ version }} <br />
       开源：<a href="https://github.com/miru-project/miru" target="_blank"
         >Github</a
@@ -67,9 +72,32 @@ readSettings();
       >
       <br />
     </div>
-  </main>
+  </div>
 </template>
 <style lang="scss" scoped>
+.setting:before {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  content: "";
+  opacity: 0.2;
+  position: fixed;
+  background-image: url(/public/miru.png);
+  background-size: 400px;
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-position-y: bottom;
+  transition: 0.2s ease;
+}
+
+@media screen and (max-width: 1024px) {
+  .setting:before {
+    background-size: 100px;
+  }
+}
+
 input {
   border: unset;
   max-width: 500px;

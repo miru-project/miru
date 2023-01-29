@@ -104,8 +104,8 @@ onMounted(() => {
   height: 60px;
   padding-left: 20px;
   padding-right: 20px;
-  z-index: 20;
-  position: sticky;
+  z-index: 30;
+  position: fixed;
   top: 0;
   background-color: rgba(238, 238, 238, 0.51);
   backdrop-filter: blur(15px);
@@ -129,7 +129,7 @@ onMounted(() => {
   top: 0;
   overflow: auto;
   background-color: #fff;
-  z-index: 30;
+  z-index: 40;
   transition: all 0.2s;
 
   .logo {
@@ -253,6 +253,7 @@ onMounted(() => {
   .content {
     margin-left: 0;
     padding: 20px;
+    margin-top: 60px;
   }
 }
 </style>
