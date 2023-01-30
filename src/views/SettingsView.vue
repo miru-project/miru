@@ -6,6 +6,7 @@ import { version } from "./../../package.json";
 const settings = useSettingsStore();
 const miruProxy = ref();
 const miruRepo = ref();
+const showKanban = ref();
 
 const setSettings = (key: string, value: string) => {
   settings.setItem(key, value);
@@ -18,14 +19,15 @@ const setDefault = (key: string) => {
 };
 
 const readSettings = () => {
-  miruProxy.value = settings.getItem("MIRU_PROXY_URL") as string;
-  miruRepo.value = settings.getItem("MIRU_REPO_URL") as string;
-  if (!miruProxy.value) {
-    miruProxy.value = import.meta.env.MIRU_PROXY_URL;
-  }
-  if (!miruRepo.value) {
-    miruRepo.value = import.meta.env.MIRU_REPO_URL;
-  }
+  miruRepo.value =
+    (settings.getItem("MIRU_REPO_URL") as string) ??
+    import.meta.env.MIRU_REPO_URL;
+  showKanban.value =
+    (settings.getItem("MIRU_SHOW_KANBAN") as boolean) ??
+    import.meta.env.MIRU_SHOW_KANBAN;
+  miruProxy.value =
+    (settings.getItem("MIRU_PROXY_URL") as string) ??
+    import.meta.env.MIRU_PROXY_URL;
 };
 readSettings();
 </script>
@@ -35,70 +37,40 @@ readSettings();
     <div class="content">
       <h3>Miru-Proxy</h3>
       <div class="input">
-        <input
-          type="text"
-          v-model="miruProxy"
-          @change="setSettings('MIRU_PROXY_URL', miruProxy)"
-        />
+        <input type="text" v-model="miruProxy" @change="setSettings('MIRU_PROXY_URL', miruProxy)" />
         <button @click="setDefault('MIRU_PROXY_URL')">
           <IconRefresh></IconRefresh>
         </button>
       </div>
       <h3>扩展仓库</h3>
       <div class="input">
-        <input
-          type="text"
-          v-model="miruRepo"
-          @change="setSettings('MIRU_REPO_URL', miruRepo)"
-        />
+        <input type="text" v-model="miruRepo" @change="setSettings('MIRU_REPO_URL', miruRepo)" />
         <button @click="setDefault('MIRU_REPO_URL')">
           <IconRefresh></IconRefresh>
         </button>
       </div>
+      <h3>看板娘</h3>
+      <input type="checkbox" name="kanban" id="kanban" v-model="showKanban"
+        @change="setSettings('MIRU_SHOW_KANBAN', showKanban)" />显示看板娘
       <h2>关于</h2>
-      <img
-        src="/public/logo.svg"
-        style="width: 80px; display: block; border-radius: 0"
-        alt="logo"
-      />
-      当前版本：v{{ version }} <br />
-      开源：<a href="https://github.com/miru-project/miru" target="_blank"
-        >Github</a
-      >
-      <br />
-      本项目灵感来自
-      <a href="https://tachiyomi.org/" target="_blank" rel="noopener noreferrer"
-        >tachiyomi</a
-      >
+      <img src="/logo.svg" style="width: 80px; display: block; border-radius: 0" alt="logo" />
+      <p>当前版本：v{{ version }} <br /></p>
+      <p>开源：<a href="https://github.com/miru-project/miru" target="_blank">Github</a></p>
+      <p> 本项目灵感来自
+        <a href="https://tachiyomi.org/" target="_blank" rel="noopener noreferrer">tachiyomi</a>
+      </p>
       <br />
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
-.setting:before {
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  content: "";
-  opacity: 0.2;
-  position: fixed;
-  background-image: url(/public/miru.png);
-  background-size: 400px;
-  background-repeat: no-repeat;
-  background-position-x: right;
-  background-position-y: bottom;
-  transition: 0.2s ease;
-}
-
 @media screen and (max-width: 1024px) {
   .setting:before {
     background-size: 100px;
   }
 }
 
-input {
+input[type="text"] {
   border: unset;
   max-width: 500px;
   width: 100%;

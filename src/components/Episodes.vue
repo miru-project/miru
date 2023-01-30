@@ -1,17 +1,25 @@
 <template>
   <div>
     <div class="content">
-      <div class="switch">
-        <button @click="checkout(v[0])" :class="{ activit: v[0] == seleteedUrlGroup }" v-for="(v, k) in prop.data"
-          :key="k">
+      <div class="selector">
+        <button
+          @click="checkout(v[0])"
+          :class="{ activit: v[0] == seleteedUrlGroup }"
+          v-for="(v, k) in prop.data"
+          :key="k"
+        >
           {{ v[0] }}
         </button>
       </div>
     </div>
     <div class="urls">
       <ul>
-        <li v-for="(v, k) in prop.data.get(seleteedUrlGroup)" :class="{ activate: playurl == v.url }"
-          @click="play(v.url, v.name, seleteedUrlGroup)" :key="k">
+        <li
+          v-for="(v, k) in prop.data.get(seleteedUrlGroup)"
+          :class="{ activate: playurl == v.url }"
+          @click="play(v.url, v.name, seleteedUrlGroup)"
+          :key="k"
+        >
           {{ v.name }}
         </li>
       </ul>
@@ -44,7 +52,7 @@ onMounted(() => {
     seleteedUrlGroup.value = prop.firstKey;
     return;
   }
-  seleteedUrlGroup.value = prop.data.keys().next().value
+  seleteedUrlGroup.value = prop.data.keys().next().value;
 });
 
 const checkout = (groupName: string) => {

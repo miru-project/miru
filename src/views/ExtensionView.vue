@@ -61,7 +61,7 @@ const uninstall = (pkg: string) => {
 <template>
   <main>
     <h1 class="page-title">扩展</h1>
-    <div class="switch">
+    <div class="selector">
       <button
         @click="(switchList = 'installed') && getInstalledExtension()"
         :class="{ activit: switchList == 'installed' }"
