@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="content">
-      <div class="switch">
+      <div class="selector">
         <button
           @click="checkout(v[0])"
           :class="{ activit: v[0] == seleteedUrlGroup }"
@@ -52,12 +52,7 @@ onMounted(() => {
     seleteedUrlGroup.value = prop.firstKey;
     return;
   }
-  prop.data.forEach((v, k) => {
-    if (k) {
-      seleteedUrlGroup.value = k;
-      return;
-    }
-  });
+  seleteedUrlGroup.value = prop.data.keys().next().value;
 });
 
 const checkout = (groupName: string) => {

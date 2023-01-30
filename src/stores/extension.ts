@@ -38,7 +38,7 @@ export const useMiruExtensionStore = defineStore("Extension", () => {
 
   // 列出已存储扩展
   const listExtensions = () => {
-    const s = JSON.parse(localStorage.getItem("Extensions") ?? "[]");
+    const s = JSON.parse(localStorage.getItem("extensions") ?? "[]");
     return new Map<string, any>(s);
   };
 
@@ -68,7 +68,7 @@ export const useMiruExtensionStore = defineStore("Extension", () => {
     const localExtension = listExtensions();
     localExtension.set(Extension.package, Extension);
     const obj = Object.fromEntries(localExtension);
-    localStorage.setItem("Extensions", JSON.stringify(Object.entries(obj)));
+    localStorage.setItem("extensions", JSON.stringify(Object.entries(obj)));
     // 装载扩展
     extensionManage.value.load(
       Extension.package,
@@ -82,7 +82,7 @@ export const useMiruExtensionStore = defineStore("Extension", () => {
     const localExtension = listExtensions();
     localExtension.delete(pkg);
     const obj = Object.fromEntries(localExtension);
-    localStorage.setItem("Extensions", JSON.stringify(Object.entries(obj)));
+    localStorage.setItem("extensions", JSON.stringify(Object.entries(obj)));
     // 卸载扩展
     extensionManage.value.unload(pkg);
   };

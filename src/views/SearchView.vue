@@ -80,11 +80,8 @@ const getNew = async (time: number, pkg: string) => {
 };
 
 onMounted(() => {
-  extensionStore.extensionManage.Extensions?.forEach((v, k) => {
-    if (!activeExtension.value) {
-      activeExtension.value = k;
-    }
-  });
+  activeExtension.value =
+    extensionStore.extensionManage.Extensions.keys().next().value;
   getNew(Math.random(), activeExtension.value);
 });
 </script>
@@ -103,7 +100,7 @@ onMounted(() => {
         />
       </form>
       <div>
-        <div class="switch">
+        <div class="selector">
           <button
             v-for="(v, k) in extensionStore.extensionManage.Extensions"
             :class="{ activit: activeExtension == v[0] }"

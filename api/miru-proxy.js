@@ -12,6 +12,10 @@ module.exports = async (req, res) => {
   createProxyMiddleware({
     target,
     changeOrigin: true,
+    headers: {
+      "user-agent": req.headers["miru-ua"] ?? req.headers["user-agent"],
+      referer: req.headers["miru-referer"] ?? req.headers["referer"],
+    },
     pathRewrite: {
       "^/request/": "/",
     },

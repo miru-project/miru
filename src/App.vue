@@ -8,8 +8,13 @@ import { useMiruExtensionStore } from "./stores/extension";
 import { ref, onMounted } from "vue";
 import IconMenu from "./components/icons/IconMenu.vue";
 import IconTips from "./components/IconTips.vue";
+import { useSettingsStore } from "./stores/settings";
 const showSidebar = ref(false);
 const extensionStore = useMiruExtensionStore();
+const settingsStore = useSettingsStore();
+const showKanban = ref(
+  settingsStore.getItem("MIRU_SHOW_KANBAN") ?? import.meta.env.MIRU_SHOW_KANBAN
+);
 onMounted(() => {
   extensionStore.initExtensions();
 });
@@ -17,7 +22,10 @@ onMounted(() => {
 
 <template>
   <header>
-    <nav :class="{ sidebar: true, showSidebar }" @click="showSidebar = false">
+    <nav
+      :class="{ sidebar: true, showSidebar, kanban: showKanban }"
+      @click="showSidebar = false"
+    >
       <div class="logo"><img src="/logo.svg" alt="logo" /></div>
       <ul>
         <RouterLink to="/">
@@ -131,6 +139,23 @@ onMounted(() => {
   background-color: #fff;
   z-index: 40;
   transition: all 0.2s;
+
+  &.kanban:before {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    content: "";
+    opacity: 0.2;
+    position: absolute;
+    background-image: url(/miru.png);
+    background-size: 120px;
+    background-repeat: no-repeat;
+    background-position-x: right;
+    background-position-y: bottom;
+    transition: 0.2s ease;
+  }
 
   .logo {
     margin-bottom: 10px;
