@@ -32,6 +32,7 @@ const play = () => {
       screenshot: true,
       setting: true,
       flip: true,
+      lock: true,
       playbackRate: true,
       aspectRatio: true,
       fullscreen: true,
@@ -71,6 +72,12 @@ const play = () => {
         },
       },
     });
+    artPlayer.on('ready', () => {
+      artPlayer.autoHeight = true;
+    });
+    artPlayer.on('resize', () => {
+      artPlayer.autoHeight = true;
+    });
   }
 };
 onMounted(() => {
@@ -88,7 +95,7 @@ onUnmounted(() => {
       <iframe
         referrerpolicy="no-referrer"
         :src="props.options.src"
-        height="100%"
+        height="auto"
         width="100%"
         class="iframe"
         scrolling="no"
@@ -106,8 +113,7 @@ onUnmounted(() => {
   </div>
 </template>
 <style lang="scss" scoped>
-.iframe,
-#artPlayer {
+.iframe {
   max-height: 600px;
   height: 50vw;
 }
