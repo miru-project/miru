@@ -1,6 +1,8 @@
 <img align="right" width="300" src="./public/miru.png" alt="Miru 看板娘"/>
 
 # <img src="./public/logo.svg" width="100">
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmiru-project%2Fmiru.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmiru-project%2Fmiru?ref=badge_shield)
+
 
 ***一个支持扩展视频源的在线影视播放器**(?)，灵感来自 [Tachiyomi](https://tachiyomi.org/)*
 
@@ -14,3 +16,7 @@
 - 📺 支持在线观看多种视频源，实现多平台视频源的统一。
 - 📝 如油猴脚本般的 MiruExtension，利用它可以轻松的实现扩展的功能。
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmiru-project%2Fmiru.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmiru-project%2Fmiru?ref=badge_large)
